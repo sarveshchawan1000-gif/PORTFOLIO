@@ -17,7 +17,9 @@ class NightCityBackground {
     this.prevAnchorX = 0;
     this.theta = 0;
     this.omega = 0;
-    this.pendulumLength = 200;
+    this.pendulumLength = 160;
+    this.targetPendulumLength = 160;
+    this.basePendulumLength = 160;
     this.gravity = 0.0035;
     this.damping = 0.982;
 
@@ -38,9 +40,11 @@ class NightCityBackground {
     this.prevAnchorX = width / 2;
     this.targetMouseX = width / 2;
     this.smoothMouseX = width / 2;
-    this.targetMouseY = height / 2;
-    this.smoothMouseY = height / 2;
-    this.pendulumLength = Math.min(Math.max(height * 0.18, 110), 180);
+    this.basePendulumLength = Math.min(Math.max(height * 0.22, 130), 220);
+    this.pendulumLength = this.basePendulumLength;
+    this.targetPendulumLength = this.basePendulumLength;
+    this.targetMouseY = this.basePendulumLength;
+    this.smoothMouseY = this.basePendulumLength;
 
     // Generate stars
     this.stars = [];
@@ -169,17 +173,31 @@ class NightCityBackground {
       this.anchorX = this.width / 2;
       this.theta = Math.sin(this.tick * 0.01) * 0.03;
       this.omega = 0;
+      this.pendulumLength = this.basePendulumLength;
     } else {
+      // Dynamic string length: increases as cursor goes down, decreases as cursor goes up
+      const minLength = Math.max(50, this.height * 0.08);
+      const maxLength = Math.max(minLength + 140, this.height * 0.85);
+      this.targetPendulumLength = Math.min(Math.max(this.targetMouseY, minLength), maxLength);
+
+      // Smoothly reel silk string length toward target
+      this.pendulumLength += (this.targetPendulumLength - this.pendulumLength) * 0.08;
+
       const prev = this.anchorX;
       // Anchor follows cursor X smoothly
       this.anchorX += (this.targetMouseX - this.anchorX) * 0.09;
       const anchorAccel = (this.anchorX - prev) - (prev - this.prevAnchorX);
       this.prevAnchorX = prev;
 
+      const safeLength = Math.max(this.pendulumLength, 40);
+
       // Acceleration torque on the pendulum
-      this.omega -= (anchorAccel / this.pendulumLength) * Math.cos(this.theta) * 0.45;
-      // Restoring gravitational torque
-      this.omega -= this.gravity * Math.sin(this.theta);
+      this.omega -= (anchorAccel / safeLength) * Math.cos(this.theta) * 0.45;
+      
+      // Restoring gravitational torque scaled by length (shorter pendulums oscillate faster: T ~ sqrt(L))
+      const freqFactor = Math.sqrt(this.basePendulumLength / safeLength);
+      this.omega -= this.gravity * freqFactor * Math.sin(this.theta);
+      
       // Damping
       this.omega *= this.damping;
       this.theta += this.omega;
@@ -278,10 +296,10 @@ class NightCityBackground {
     ctx.fillRect(0, height - 70, width, 70);
 
     // Draw Pendulum Silk Thread & Spider
-    this.drawSpiderPendulum(ctx);
+    this.drawSpiderPendulum(ctx, reducedMotion);
   }
 
-  drawSpiderPendulum(ctx) {
+  drawSpiderPendulum(ctx, reducedMotion) {
     const anchorY = 0;
     const bobX = this.anchorX + Math.sin(this.theta) * this.pendulumLength;
     const bobY = anchorY + Math.cos(this.theta) * this.pendulumLength;
@@ -348,19 +366,26 @@ class NightCityBackground {
       { startY: 3,  kneeX: -7, kneeY: 8,   footX: -10, footY: 15 }
     ];
 
-    for (const leg of legConfigs) {
+    // Subtle leg flex based on vertical silk reeling and pendulum swing
+    const reelingDelta = Math.abs(this.targetPendulumLength - this.pendulumLength);
+    const motionAmount = reducedMotion ? 0 : Math.min(Math.abs(this.omega) * 3 + reelingDelta * 0.04, 1.2);
+
+    for (let i = 0; i < legConfigs.length; i++) {
+      const leg = legConfigs[i];
+      const legOffset = motionAmount > 0.03 ? Math.sin(this.tick * 0.22 + i * 0.8) * motionAmount * 1.5 : 0;
+
       // Left leg
       ctx.beginPath();
       ctx.moveTo(-2, leg.startY);
-      ctx.lineTo(leg.kneeX, leg.kneeY);
-      ctx.lineTo(leg.footX, leg.footY);
+      ctx.lineTo(leg.kneeX + legOffset * 0.5, leg.kneeY + legOffset);
+      ctx.lineTo(leg.footX + legOffset, leg.footY + legOffset * 1.2);
       ctx.stroke();
 
       // Right leg (mirrored)
       ctx.beginPath();
       ctx.moveTo(2, leg.startY);
-      ctx.lineTo(-leg.kneeX, leg.kneeY);
-      ctx.lineTo(-leg.footX, leg.footY);
+      ctx.lineTo(-leg.kneeX - legOffset * 0.5, leg.kneeY + legOffset);
+      ctx.lineTo(-leg.footX - legOffset, leg.footY + legOffset * 1.2);
       ctx.stroke();
     }
 
