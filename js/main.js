@@ -58,6 +58,7 @@
     loadProjects();
     initTypewriter();
     initFeaturedProject();
+    bindTiltToCards();
     startLoop();
   }
 
@@ -230,6 +231,9 @@
   function bindTiltToCards() {
     const cards = document.querySelectorAll('.tilt-card');
     cards.forEach(card => {
+      if (card.dataset.tiltBound) return;
+      card.dataset.tiltBound = 'true';
+
       card.addEventListener('mousemove', (e) => {
         if (reducedMotion) return;
 

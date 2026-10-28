@@ -209,6 +209,17 @@ p {
   -webkit-backdrop-filter: blur(2px);
 }
 
+/* --- Tilt Card Mechanics --- */
+.tilt-card {
+  transform-style: preserve-3d;
+  transition: transform 0.15s ease-out, border-color 0.2s ease;
+  will-change: transform;
+}
+
+.tilt-card:hover {
+  border-color: var(--color-ink);
+}
+
 /* --- Layout Containers --- */
 .app-container {
   display: flex;
