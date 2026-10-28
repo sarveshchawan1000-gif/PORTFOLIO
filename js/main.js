@@ -92,14 +92,20 @@
   }
 
   function getSceneForRoute(route) {
-    if (['about', 'journey'].includes(route)) return 'sakura';
+    if (['about', 'journey'].includes(route)) return 'spiderweb';
     if (['projects', 'skills'].includes(route)) return 'circuit';
     return 'nightcity';
   }
 
   function initScenes() {
     if (window.NightCityBackground) scenes.nightcity = new window.NightCityBackground();
-    if (window.SakuraBackground) scenes.sakura = new window.SakuraBackground();
+    if (window.SpiderWebBackground) {
+      scenes.spiderweb = new window.SpiderWebBackground();
+      scenes.sakura = scenes.spiderweb;
+    } else if (window.SakuraBackground) {
+      scenes.spiderweb = new window.SakuraBackground();
+      scenes.sakura = scenes.spiderweb;
+    }
     if (window.CircuitBackground) scenes.circuit = new window.CircuitBackground();
 
     // Determine initial scene from URL hash
