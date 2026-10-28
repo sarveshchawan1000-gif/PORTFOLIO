@@ -1,0 +1,31 @@
+[
+  {
+    "id": "amendment",
+    "status": "Active experiment",
+    "title": "AMENDMENT",
+    "summary": "A board game where players rewrite the rules mid-match. A local Gemma model via Ollama proposes and interprets amendments; a deterministic engine enforces them.",
+    "problem": "Dynamic rule-making in tabletop games traditionally leads to ambiguity and game-breaking edge cases. Generative models can invent creative twists, but unconstrained LLM outputs easily hallucinate impossible mechanics or break game-state continuity.",
+    "approach": "Engineered a dual-engine architecture: a local Gemma model running in Ollama translates player intent into structured JSON rule contracts, while a deterministic Python state machine validates mathematical invariants before merging amendments into active gameplay.",
+    "stack": ["Python", "FastAPI", "Ollama", "Gemma"],
+    "links": {
+      "github": "[github-repo-url]",
+      "demo": "[demo-link]"
+    },
+    "metrics": "Local sub-300ms inference • Zero cloud dependencies"
+  },
+  {
+    "id": "fashion-store",
+    "status": "Live concept",
+    "title": "Fashion Store",
+    "summary": "A premium clothing storefront with parallax scenes and sideways motion, cream/black/cyan identity, and INR pricing.",
+    "problem": "Standard e-commerce layouts feel mechanical and grid-bound, failing to deliver the sensory atmosphere and editorial depth needed for high-end boutique apparel.",
+    "approach": "Built a bespoke zero-framework storefront utilizing multi-layer CSS parallax, horizontal swipe kinematics, a high-contrast cream/black/cyan color system, and instant localized INR pricing calculations without layout shifting.",
+    "stack": ["HTML5", "CSS3", "JavaScript"],
+    "links": {
+      "github": "[github-repo-url]",
+      "demo": "[demo-link]"
+    },
+    "metrics": "60fps sideways scroll • 0kB external runtime"
+  }
+]
+

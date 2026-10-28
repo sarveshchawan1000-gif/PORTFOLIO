@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>[Your Name] — Builds things that think, move, and ship</title>
+  
+  <meta name="description" content="Personal engineering portfolio of [Your Name]. Local AI, board game rule engines, and creative web engineering.">
+  <meta name="author" content="[Your Name]">
+  <meta name="theme-color" content="#090B16">
+
+  <!-- Open Graph / Meta -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://[portfolio-domain].com/">
+  <meta property="og:title" content="[Your Name] — Builds things that think, move, and ship">
+  <meta property="og:description" content="Personal engineering portfolio representing systems, local AI experimentation, and high-craft creative front-end.">
+  <meta property="og:image" content="./favicon.svg">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+
+  <!-- Fonts: Space Grotesk (300/400/500/700) and Space Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <!-- Skip to Content for Screen Readers -->
+  <a href="#content" class="skip-link">Skip to main content</a>
+
+  <!-- Fixed Fullscreen Background Canvas -->
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+  <div class="app-container">
+    <!-- Site Header & Navigation -->
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="#home" class="site-brand" aria-label="Home page">
+          <span class="brand-marker" aria-hidden="true"></span>
+          <span>[Your Name]</span>
+        </a>
+
+        <nav class="site-nav" aria-label="Primary Navigation">
+          <a href="#home" class="nav-link" data-route="home">01 // Home</a>
+          <a href="#about" class="nav-link" data-route="about">02 // About</a>
+          <a href="#projects" class="nav-link" data-route="projects">03 // Projects</a>
+          <a href="#skills" class="nav-link" data-route="skills">04 // Skills</a>
+          <a href="#journey" class="nav-link" data-route="journey">05 // Journey</a>
+          <a href="#contact" class="nav-link" data-route="contact">06 // Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main id="content" tabindex="-1">
+      
+      <!-- ================= 01: HOME VIEW ================= -->
+      <section id="view-home" class="page-view is-active" aria-labelledby="home-heading">
+        <div class="home-hero">
+          <h1 id="home-heading" class="hero-statement">
+            [Your Name] builds things that <span class="emp-red">think</span>, move, and ship.
+          </h1>
+
+          <div class="typewriter-line" aria-live="polite">
+            <span class="text-mono">&gt;&nbsp;</span>
+            <span id="role-typewriter">Software engineer in progress</span>
+            <span class="typewriter-cursor" aria-hidden="true"></span>
+          </div>
+
+          <div class="cta-group">
+            <a href="#projects" class="btn btn-primary">See the builds &rarr;</a>
+            <a href="#contact" class="btn">Get in touch &rarr;</a>
+          </div>
+        </div>
+
+        <div class="home-highlights-grid">
+          <!-- Highlight 1: Featured Project -->
+          <a href="#projects" class="panel highlight-tile" aria-label="Featured Project: AMENDMENT">
+            <div class="web-corner top-right"></div>
+            <div class="web-corner bottom-left"></div>
+            <div>
+              <span class="highlight-label">Featured Build</span>
+              <h2 class="highlight-title thread-heading">AMENDMENT: Dynamic Rule Engine</h2>
+              <p class="highlight-desc">
+                A tabletop game where players rewrite rules mid-match. Local Gemma via Ollama parses natural language amendments while a deterministic Python engine enforces invariants.
+              </p>
+            </div>
+            <span class="tile-arrow">Inspect case study &rarr;</span>
+          </a>
+
+          <!-- Highlight 2: Journey -->
+          <a href="#journey" class="panel highlight-tile" aria-label="Career Journey Overview">
+            <div class="web-corner top-right"></div>
+            <div class="web-corner bottom-left"></div>
+            <div>
+              <span class="highlight-label">Evolution</span>
+              <h2 class="highlight-title thread-heading">Engineering Journey</h2>
+              <p class="highlight-desc">
+                From low-level computing foundations to client-side physics engines and local LLM orchestration. Follow the progression across milestones.
+              </p>
+            </div>
+            <span class="tile-arrow">View timeline thread &rarr;</span>
+          </a>
+        </div>
+
+        <!-- Wrap-around Pagination -->
+        <nav class="view-pagination" aria-label="Page navigation">
+          <a href="#contact" class="pagination-link">&larr; Previous: 06 // Contact</a>
+          <span class="keyboard-hint text-mono">Use &larr; / &rarr; arrow keys to navigate</span>
+          <a href="#about" class="pagination-link">Next: 02 // About &rarr;</a>
+        </nav>
+      </section>
+
+      <!-- ================= 02: ABOUT VIEW ================= -->
+      <section id="view-about" class="page-view" hidden aria-labelledby="about-heading">
+        <div class="about-grid">
+          <!-- Bio & Core Story -->
+          <article class="panel">
+            <div class="web-corner top-right"></div>
+            <div class="web-corner bottom-left"></div>
+
+            <h1 id="about-heading" class="thread-heading">About [Your Name]</h1>
+            <p class="bio-lead">
+              I am an engineer focused on the intersection of deterministic logic, local intelligence, and creative web interactions.
+            </p>
+            <p class="bio-body">
+              I treat software as a physical craft: every interface must have kinematic weight, every backend must remain mathematically sound, and every system should be built without unnecessary bloat. My background spans building local AI integrations with small open weights models, authoring custom canvas simulations, and architecting zero-runtime frontend applications.
+            </p>
+
+            <h2 class="label-heading">Creative inspirations &amp; systems</h2>
+            <div class="chips-container" aria-label="Creative interests">
+              <span class="interest-chip">
+                <span class="chip-tag">#</span> Minecraft: redstone logic &amp; emergent systems
+              </span>
+              <span class="interest-chip">
+                <span class="chip-tag">#</span> Spider-Man: web dynamics &amp; agile locomotion
+              </span>
+              <span class="interest-chip">
+                <span class="chip-tag">#</span> Anime: kinetic cinematography &amp; deliberate craft
+              </span>
+            </div>
+          </article>
+
+          <!-- How I Work Principles -->
+          <aside class="panel">
+            <div class="web-corner top-right"></div>
+            <div class="web-corner bottom-left"></div>
+
+            <h2 class="thread-heading">How I work</h2>
+            <div class="principles-list">
+              <div class="principle-item">
+                <h3 class="principle-title">1. Plan it</h3>
+                <p class="principle-desc">
+                  Model failure modes, define data contracts, and anticipate edge cases before touching the keyboard.
+                </p>
+              </div>
+              <div class="principle-item">
+                <h3 class="principle-title">2. Build it small</h3>
+                <p class="principle-desc">
+                  Construct small, deterministic units that can be tested in isolation and composed without friction.
+                </p>
+              </div>
+              <div class="principle-item">
+                <h3 class="principle-title">3. Keep it honest</h3>
+                <p class="principle-desc">
+                  Measure actual frame rates, profile memory, verify invariants, and avoid cargo-cult dependencies.
+                </p>
+              </div>
+            </div>
+
+            <div style="margin-top: 2rem;">
+              <a href="#projects" class="btn btn-primary" style="width: 100%;">View technical builds &rarr;</a>
+            </div>
+          </aside>
+        </div>
+
+        <!-- Wrap-around Pagination -->
+        <nav class="view-pagination" aria-label="Page navigation">
+          <a href="#home" class="pagination-link">&larr; Previous: 01 // Home</a>
+          <span class="keyboard-hint text-mono">Use &larr; / &rarr; arrow keys to navigate</span>
+          <a href="#projects" class="pagination-link">Next: 03 // Projects &rarr;</a>
+        </nav>
+      </section>
+
+      <!-- ================= 03: PROJECTS VIEW ================= -->
+      <section id="view-projects" class="page-view" hidden aria-labelledby="projects-heading">
+        <div class="projects-intro">
+          <h1 id="projects-heading" class="thread-heading">Engineered builds</h1>
+          <p class="text-muted">
+            Case studies detailing real problems, architectural decisions, and production metrics. Loaded dynamically from <code>projects.json</code>.
+          </p>
+        </div>
+
+        <!-- Dynamic Container for Projects + Next Build -->
+        <div id="projects-container" class="projects-grid" aria-live="polite">
+          <!-- Rendered dynamically by js/main.js -->
+        </div>
+
+        <div style="text-align: center; margin: 2rem 0;">
+          <a href="#contact" class="btn btn-primary">Discuss a collaboration &rarr;</a>
+        </div>
+
+        <!-- Wrap-around Pagination -->
+        <nav class="view-pagination" aria-label="Page navigation">
+          <a href="#about" class="pagination-link">&larr; Previous: 02 // About</a>
+          <span class="keyboard-hint text-mono">Use &larr; / &rarr; arrow keys to navigate</span>
+          <a href="#skills" class="pagination-link">Next: 04 // Skills &rarr;</a>
+        </nav>
+      </section>
+
+      <!-- ================= 04: SKILLS VIEW ================= -->
+      <section id="view-skills" class="page-view" hidden aria-labelledby="skills-heading">
+        <div style="margin-bottom: 2rem;">
+          <h1 id="skills-heading" class="thread-heading">Technical competencies</h1>
+          <p class="text-muted">
+            Ground truth capabilities organized by functional domain. Evaluated through production implementations, not arbitrary percentage bars.
+          </p>
+        </div>
+
+        <div class="skills-grid">
+          <!-- Panel 1: Languages -->
+          <div class="panel">
+            <div class="web-corner top-right"></div>
+            <div class="web-corner bottom-left"></div>
+            <h2 class="skill-panel-title thread-heading">Languages</h2>
+            <ul class="skill-list">
+              <li class="skill-item">
+                <span class="skill-name">Python</span>
+                <span class="skill-context">FastAPI, AST, rules logic</span>
+              </li>
+              <li class="skill-item">
+                <span class="skill-name">JavaScript</span>
+                <span class="skill-context">Vanilla ES6+, Web APIs, Wasm</span>
+              </li>
+              <li class="skill-item">
+                <span class="skill-name">HTML5</span>
+                <span class="skill-context">Semantic landmarks, a11y</span>
+              </li>
+              <li class="skill-item">
+                <span class="skill-name">CSS3</span>
+                <span class="skill-context">Custom properties, 3D math, layout</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Panel 2: Backend -->
+          <div class="panel">
+            <div class="web-corner top-right"></div>
+            <div class="web-corner bottom-left"></div>
+            <h2 class="skill-panel-title thread-heading">Backend</h2>
+            <ul class="skill-list">
+              <li class="skill-item">
+                <span class="skill-name">FastAPI</span>
+                <span class="skill-context">Async IO, OpenAPI, Pydantic</span>
+              </li>
+              <li class="skill-item">
+                <span class="skill-name">REST Design</span>
+                <span class="skill-context">Stateless contracts, HTTP semantics</span>
+              </li>
+              <li class="skill-item">
+                <span class="skill-name">Rules Engines</span>
+                <span class="skill-context">State machine invariants, verification</span>
+              </li>
+              <li class="skill-item">
+                <span class="skill-name">Local Daemons</span>
+                <span class="skill-context">Background process monitoring</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Panel 3: AI -->
+          <div class="panel">
+            <div class="web-corner top-right"></div>
+            <div class="web-corner bottom-left"></div>
+            <h2 class="skill-panel-title thread-heading">AI &amp; Local Models</h2>
+            <ul class="skill-list">
+              <li class="skill-item">
+                <span class="skill-name">Local LLMs</span>
+                <span class="skill-context">Quantized weights, edge execution</span>
+              </li>
+              <li class="skill-item">
+                <span class="skill-name">Ollama</span>
+                <span class="skill-context">CLI orchestration, model serving</span>
+              </li>
+              <li class="skill-item">
+                <span class="skill-name">Prompt Design</span>
+                <span class="skill-context">Constrained JSON grammars</span>
+              </li>
+              <li class="skill-item">
+                <span class="skill-name">Gemma</span>
+                <span class="skill-context">Fine-tuning &amp; rule parsing</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Panel 4: Frontend -->
+          <div class="panel">
+            <div class="web-corner top-right"></div>
+            <div class="web-corner bottom-left"></div>
+            <h2 class="skill-panel-title thread-heading">Frontend &amp; Graphics</h2>
+            <ul class="skill-list">
+              <li class="skill-item">
+                <span class="skill-name">Canvas Animation</span>
+                <span class="skill-context">RAF loops, DPR math, physics</span>
+              </li>
+              <li class="skill-item">
+                <span class="skill-name">Parallax Engines</span>
+                <span class="skill-context">Multi-layer coordinate projection</span>
+              </li>
+              <li class="skill-item">
+                <span class="skill-name">Responsive Layout</span>
+                <span class="skill-context">Mobile-first, fluid scales</span>
+              </li>
+              <li class="skill-item">
+                <span class="skill-name">Kinetic UI</span>
+                <span class="skill-context">3D card tilt &amp; vector art</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Panel 5: Practice -->
+          <div class="panel">
+            <div class="web-corner top-right"></div>
+            <div class="web-corner bottom-left"></div>
+            <h2 class="skill-panel-title thread-heading">Practice</h2>
+            <ul class="skill-list">
+              <li class="skill-item">
+                <span class="skill-name">PRDs &amp; Specs</span>
+                <span class="skill-context">Architecture roadmaps, invariants</span>
+              </li>
+              <li class="skill-item">
+                <span class="skill-name">System Design</span>
+                <span class="skill-context">Modularity, decoupled components</span>
+              </li>
+              <li class="skill-item">
+                <span class="skill-name">Accessibility</span>
+                <span class="skill-context">WCAG 2.1 AA, screen-reader flow</span>
+              </li>
+              <li class="skill-item">
+                <span class="skill-name">Performance</span>
+                <span class="skill-context">60fps budgets, battery economy</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Panel 6: Learning Next -->
+          <div class="panel learning-next-panel">
+            <div class="web-corner top-right"></div>
+            <div class="web-corner bottom-left"></div>
+            <div class="learning-next-badge">Exploration Frontier</div>
+            <h2 class="skill-panel-title thread-heading">Learning Next</h2>
+            <ul class="skill-list">
+              <li class="skill-item">
+                <span class="skill-name">WebAssembly (Wasm)</span>
+                <span class="skill-context">Rust-compiled simulation kernels</span>
+              </li>
+              <li class="skill-item">
+                <span class="skill-name">Local Agent Routing</span>
+                <span class="skill-context">Autonomous deterministic tool use</span>
+              </li>
+              <li class="skill-item">
+                <span class="skill-name">Custom Shaders</span>
+                <span class="skill-context">Raw WebGL fragment pipelines</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin: 2rem 0;">
+          <a href="#journey" class="btn btn-primary">Explore journey timeline &rarr;</a>
+        </div>
+
+        <!-- Wrap-around Pagination -->
+        <nav class="view-pagination" aria-label="Page navigation">
+          <a href="#projects" class="pagination-link">&larr; Previous: 03 // Projects</a>
+          <span class="keyboard-hint text-mono">Use &larr; / &rarr; arrow keys to navigate</span>
+          <a href="#journey" class="pagination-link">Next: 05 // Journey &rarr;</a>
+        </nav>
+      </section>
+
+      <!-- ================= 05: JOURNEY VIEW ================= -->
+      <section id="view-journey" class="page-view" hidden aria-labelledby="journey-heading">
+        <div style="margin-bottom: 2rem;">
+          <h1 id="journey-heading" class="thread-heading">Engineering journey</h1>
+          <p class="text-muted">
+            A chronological timeline of technical evolutions, core breakthroughs, and project milestones.
+          </p>
+        </div>
+
+        <!-- Single vertical thread timeline -->
+        <div class="timeline-container">
+          <!-- Entry 1: Foundation -->
+          <article class="timeline-entry">
+            <div class="timeline-bead" aria-hidden="true"></div>
+            <div class="timeline-date">[year]</div>
+            <h2 class="timeline-title thread-heading">Foundation</h2>
+            <p class="timeline-body">
+              Started deep exploration of foundational computer science: discrete mathematics, memory models, deterministic state automata, and core algorithmic problem solving. Built first command-line utilities and interactive logic tools.
+            </p>
+          </article>
+
+          <!-- Entry 2: First builds -->
+          <article class="timeline-entry">
+            <div class="timeline-bead" aria-hidden="true"></div>
+            <div class="timeline-date">[year]</div>
+            <h2 class="timeline-title thread-heading">First builds</h2>
+            <p class="timeline-body">
+              Transitioned to building interactive user interfaces and web applications from first principles. Refused heavy frameworks to master raw DOM APIs, 2D HTML canvas graphics, physics simulations, and responsive typographic systems.
+            </p>
+          </article>
+
+          <!-- Entry 3: AI and games -->
+          <article class="timeline-entry">
+            <div class="timeline-bead" aria-hidden="true"></div>
+            <div class="timeline-date">[year]</div>
+            <h2 class="timeline-title thread-heading">AI and games</h2>
+            <p class="timeline-body">
+              Combined game mechanics with modern AI engineering. Conceived and built AMENDMENT: utilizing local Gemma models via Ollama to generate dynamic rule changes while anchoring game state to a deterministic Python rules engine.
+            </p>
+          </article>
+
+          <!-- Entry 4: Next -->
+          <article class="timeline-entry">
+            <div class="timeline-bead" aria-hidden="true"></div>
+            <div class="timeline-date">[year]</div>
+            <h2 class="timeline-title thread-heading">Next</h2>
+            <p class="timeline-body">
+              Stepping into production distributed systems, client-side WebAssembly compute kernels, and autonomous local multi-agent simulations. Committed to shipping software that moves smoothly, thinks locally, and lasts.
+            </p>
+          </article>
+        </div>
+
+        <div style="text-align: center; margin: 2rem 0;">
+          <a href="#contact" class="btn btn-primary">Let's connect &rarr;</a>
+        </div>
+
+        <!-- Wrap-around Pagination -->
+        <nav class="view-pagination" aria-label="Page navigation">
+          <a href="#skills" class="pagination-link">&larr; Previous: 04 // Skills</a>
+          <span class="keyboard-hint text-mono">Use &larr; / &rarr; arrow keys to navigate</span>
+          <a href="#contact" class="pagination-link">Next: 06 // Contact &rarr;</a>
+        </nav>
+      </section>
+
+      <!-- ================= 06: CONTACT VIEW ================= -->
+      <section id="view-contact" class="page-view" hidden aria-labelledby="contact-heading">
+        <div style="margin-bottom: 2rem;">
+          <h1 id="contact-heading" class="thread-heading">Get in touch</h1>
+          <p class="text-muted">
+            Direct channels for engineering opportunities, technical discussions, and collaborative builds.
+          </p>
+        </div>
+
+        <div class="contact-layout">
+          <!-- Availability Panel -->
+          <div class="panel availability-card">
+            <div class="web-corner top-right"></div>
+            <div class="web-corner bottom-left"></div>
+
+            <div>
+              <div class="availability-status">
+                <span class="availability-dot" aria-hidden="true"></span>
+                <span>Active &amp; Available</span>
+              </div>
+              <h2 class="thread-heading" style="font-size: 1.5rem;">Current availability</h2>
+              <p class="availability-text">
+                I am actively seeking software engineering roles, technical systems experiments, and high-craft creative front-end collaborations.
+              </p>
+              <p class="text-muted" style="font-size: 0.95rem;">
+                Whether you have an ambitious open-source initiative, a local AI game architecture, or want to build crisp web software together, my inbox is always open.
+              </p>
+            </div>
+
+            <div style="margin-top: 2rem;">
+              <span class="text-mono text-muted" style="font-size: 0.8125rem;">Location: Remote / Open to relocation</span>
+            </div>
+          </div>
+
+          <!-- Contact Buttons Panel -->
+          <div class="panel contact-channels-panel">
+            <div class="web-corner top-right"></div>
+            <div class="web-corner bottom-left"></div>
+
+            <h2 class="label-heading">Verified Channels</h2>
+
+            <!-- Email: Primary Action per View rule (red fill) -->
+            <a href="mailto:[email]" class="contact-action-btn primary-email">
+              <span>Email: [email]</span>
+              <span class="btn-arrow" aria-hidden="true">&rarr;</span>
+            </a>
+
+            <!-- GitHub -->
+            <a href="[url]" class="contact-action-btn" target="_blank" rel="noopener noreferrer">
+              <span>GitHub: [url]</span>
+              <span class="btn-arrow" aria-hidden="true">&#x2197;</span>
+            </a>
+
+            <!-- LinkedIn -->
+            <a href="[url]" class="contact-action-btn" target="_blank" rel="noopener noreferrer">
+              <span>LinkedIn: [url]</span>
+              <span class="btn-arrow" aria-hidden="true">&#x2197;</span>
+            </a>
+
+            <!-- Resume PDF -->
+            <a href="[file]" class="contact-action-btn" target="_blank" rel="noopener noreferrer">
+              <span>Resume PDF: [file]</span>
+              <span class="btn-arrow" aria-hidden="true">&#x2193;</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Wrap-around Pagination -->
+        <nav class="view-pagination" aria-label="Page navigation">
+          <a href="#journey" class="pagination-link">&larr; Previous: 05 // Journey</a>
+          <span class="keyboard-hint text-mono">Use &larr; / &rarr; arrow keys to navigate</span>
+          <a href="#home" class="pagination-link">Next: 01 // Home &rarr;</a>
+        </nav>
+      </section>
+
+    </main>
+
+    <!-- Site Footer -->
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-meta">
+          <span>&copy; [year] [Your Name]</span>
+          <span class="footer-bullet" aria-hidden="true">&bull;</span>
+          <span>Zero-runtime static portfolio</span>
+        </div>
+        <div class="text-mono" style="font-size: 0.75rem;">
+          60fps Canvas Backgrounds &bull; Vanilla JS &bull; High-DPI
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Background Scripts -->
+  <script src="./js/backgrounds/nightcity.js"></script>
+  <script src="./js/backgrounds/sakura.js"></script>
+  <script src="./js/backgrounds/circuit.js"></script>
+
+  <!-- Router Script -->
+  <script src="./js/router.js"></script>
+
+  <!-- Main Engine Script -->
+  <script src="./js/main.js"></script>
+</body>
+</html>
+
