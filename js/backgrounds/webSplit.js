@@ -56,6 +56,13 @@ class WebSplitBackground {
     this.pulseTimer   = 0;
     this.nextPulseIn  = 90; // frames
 
+    // Spider on web state
+    this.spiderX          = 0;
+    this.spiderY          = 0;
+    this.spiderAngle      = 0;
+    this.spiderTargetAngle = 0;
+    this.spiderLegPhase   = 0;
+
     // Halftone dot data (static, recomputed on resize)
     this.dots         = [];
   }
@@ -72,6 +79,12 @@ class WebSplitBackground {
     this.seamTargetAngle = 0;
     this.idlePhase    = 0;
     this.webAngle     = 0;
+
+    this.spiderX          = this.seamX;
+    this.spiderY          = height * 0.5;
+    this.spiderAngle      = 0;
+    this.spiderTargetAngle = 0;
+    this.spiderLegPhase   = 0;
 
     if (this.mouseX === -9999) {
       this.mouseX = width  * 0.5;
@@ -125,6 +138,9 @@ class WebSplitBackground {
       // Keep seam still, no rotation, no drift
       this.seamX     = this.width * 0.5;
       this.seamAngle = 0;
+      this.spiderX   = this.seamX;
+      this.spiderY   = this.height * 0.5;
+      this.spiderAngle = 0;
       return;
     }
 
@@ -172,6 +188,45 @@ class WebSplitBackground {
       this.pulse.progress += lowFpsMode ? 0.018 : 0.012;
       if (this.pulse.progress >= 1) this.pulse.active = false;
     }
+
+    // Spider state update on the web
+    const webHubX = this.seamX;
+    const webHubY = this.height * 0.5;
+    let targetX = webHubX;
+    let targetY = webHubY;
+
+    if (this.hasPointer) {
+      const dx = this.mouseX - webHubX;
+      const dy = this.mouseY - webHubY;
+      const dist = Math.hypot(dx, dy);
+
+      // Face cursor direction
+      this.spiderTargetAngle = Math.atan2(dy, dx) + Math.PI / 2;
+
+      // Subtle creep along the web toward pointer (capped to inner web radius ~50px)
+      const maxCrawl = Math.min(this._orbWebRadius(this.width, this.height) * 0.22, 50);
+      const crawlDist = Math.min(dist * 0.16, maxCrawl);
+      if (dist > 1) {
+        targetX = webHubX + (dx / dist) * crawlDist;
+        targetY = webHubY + (dy / dist) * crawlDist;
+      }
+    }
+
+    // Smooth spider position
+    const prevX = this.spiderX;
+    const prevY = this.spiderY;
+    this.spiderX += (targetX - this.spiderX) * 0.06;
+    this.spiderY += (targetY - this.spiderY) * 0.06;
+
+    // Leg stepping motion
+    const moveSpeed = Math.hypot(this.spiderX - prevX, this.spiderY - prevY);
+    this.spiderLegPhase += moveSpeed > 0.08 ? moveSpeed * 0.35 : 0.02;
+
+    // Smooth angle interpolation (handling wrap-around)
+    let diff = this.spiderTargetAngle - this.spiderAngle;
+    while (diff < -Math.PI) diff += Math.PI * 2;
+    while (diff > Math.PI) diff -= Math.PI * 2;
+    this.spiderAngle += diff * 0.08;
   }
 
   // ─── draw ─────────────────────────────────────────────────────────────────
@@ -252,6 +307,9 @@ class WebSplitBackground {
     if (this.pulse.active && !reducedMotion) {
       this._drawPulse(ctx, webCx, webCy, width, height, spokeCount);
     }
+
+    // ── 9. Spider on Web ─────────────────────────────────────────────────────
+    this._drawSpider(ctx, reducedMotion);
   }
 
   // ─── seam ─────────────────────────────────────────────────────────────────
@@ -509,6 +567,87 @@ class WebSplitBackground {
     ctx.beginPath();
     ctx.arc(px, py, 1.4, 0, Math.PI * 2);
     ctx.fill();
+  }
+
+  // ─── spider on web ────────────────────────────────────────────────────────
+
+  _drawSpider(ctx, reducedMotion) {
+    ctx.save();
+    ctx.translate(this.spiderX, this.spiderY);
+
+    // Subtle twitch when pulse vibration passes along a spoke
+    const pulseTwitch = (this.pulse.active && this.pulse.progress < 0.3 && !reducedMotion)
+      ? Math.sin(this.pulse.progress * Math.PI * 6) * 0.08
+      : 0;
+    ctx.rotate(this.spiderAngle + pulseTwitch);
+
+    // Subtle drop shadow onto web background
+    ctx.fillStyle = 'rgba(9, 11, 22, 0.45)';
+    ctx.beginPath();
+    ctx.ellipse(1, 3, 7.5, 9.5, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 8 Delicate jointed spider legs gripping the web strands
+    ctx.strokeStyle = '#E23636';
+    ctx.lineWidth   = 1.25;
+    ctx.lineCap     = 'round';
+    ctx.lineJoin    = 'round';
+
+    const legConfigs = [
+      { startY: -4, kneeX: -8,  kneeY: -11, footX: -13, footY: -9  },
+      { startY: -2, kneeX: -11, kneeY: -6,  footX: -16, footY: -4  },
+      { startY: 1,  kneeX: -11, kneeY: 4,   footX: -15, footY: 10  },
+      { startY: 3,  kneeX: -8,  kneeY: 9,   footX: -12, footY: 16  }
+    ];
+
+    for (let i = 0; i < legConfigs.length; i++) {
+      const leg = legConfigs[i];
+      const stepPhase = this.spiderLegPhase + (i % 2 === 0 ? 0 : Math.PI);
+      const stepOffset = reducedMotion ? 0 : Math.sin(stepPhase) * 1.8;
+
+      // Left leg
+      ctx.beginPath();
+      ctx.moveTo(-2.5, leg.startY);
+      ctx.lineTo(leg.kneeX + stepOffset * 0.4, leg.kneeY + stepOffset);
+      ctx.lineTo(leg.footX + stepOffset, leg.footY + stepOffset * 1.2);
+      ctx.stroke();
+
+      // Right leg (mirrored)
+      ctx.beginPath();
+      ctx.moveTo(2.5, leg.startY);
+      ctx.lineTo(-leg.kneeX - stepOffset * 0.4, leg.kneeY + stepOffset);
+      ctx.lineTo(-leg.footX - stepOffset, leg.footY + stepOffset * 1.2);
+      ctx.stroke();
+    }
+
+    // Spider Abdomen (body)
+    ctx.fillStyle = '#E23636';
+    ctx.beginPath();
+    ctx.ellipse(0, 5.5, 5.5, 8, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Subtle pale dorsal diamond marking on abdomen
+    ctx.fillStyle = 'rgba(243, 241, 234, 0.88)';
+    ctx.beginPath();
+    ctx.moveTo(0, 2);
+    ctx.lineTo(2, 5.5);
+    ctx.lineTo(0, 9);
+    ctx.lineTo(-2, 5.5);
+    ctx.closePath();
+    ctx.fill();
+
+    // Cephalothorax (head)
+    ctx.fillStyle = '#B52323';
+    ctx.beginPath();
+    ctx.ellipse(0, -3.5, 3.8, 4.2, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 2 tiny pale eyes reflecting ambient light
+    ctx.fillStyle = '#F3F1EA';
+    ctx.fillRect(-1.6, -5.6, 1.2, 1.2);
+    ctx.fillRect(0.4, -5.6, 1.2, 1.2);
+
+    ctx.restore();
   }
 }
 
