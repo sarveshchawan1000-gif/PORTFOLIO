@@ -97,7 +97,7 @@ Below is the short checklist of all placeholders in the codebase to replace with
 | **Full Name** | `index.html`, `js/router.js` | `Sarvesh Chavan` | Configured across site titles, brand header, and headings. |
 | **GitHub URL** | `index.html`, `data/projects.json` | `https://github.com/sarveshchawan1000-gif` | Configured in contact channels and project cards. |
 | **LinkedIn URL** | `index.html` | `https://www.linkedin.com/in/sarvesh-chavan-a57080414/` | Configured in contact channels. |
-| **Email Address** | `index.html` | `[email]` | In `mailto:[email]` and button label on `#contact`. |
+| **Email Address** | `index.html` | `sarvesh.chawan1000@gmail.com` | Configured in verified channels on `#contact`. |
 | **Resume File** | `index.html` | `[file]` | Replace with path to your resume PDF (e.g., `./resume.pdf`). |
 | **Project Demo Links** | `data/projects.json` | `[demo-link]` | Replace with live deployment URLs for AMENDMENT and Fashion Store. |
 | **Portfolio Domain** | `index.html` | `[portfolio-domain]` | In Open Graph meta tags (e.g., `sarveshchavan.dev`). |
