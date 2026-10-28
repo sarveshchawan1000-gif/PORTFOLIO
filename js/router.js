@@ -6,32 +6,32 @@
 
   const ROUTE_META = {
     home: {
-      title: '[Your Name] — Builds things that think, move, and ship',
-      description: 'Personal engineering portfolio of [Your Name]. Local AI, board game rule engines, and creative web engineering.',
+      title: 'Sarvesh Chavan — Builds things that think, move, and ship',
+      description: 'Personal engineering portfolio of Sarvesh Chavan. Local AI, board game rule engines, and creative web engineering.',
       scene: 'nightcity'
     },
     about: {
-      title: 'About — [Your Name]',
+      title: 'About — Sarvesh Chavan',
       description: 'Engineering mindset, creative interests in Minecraft, Spider-Man, and anime, and working principles.',
       scene: 'webSplit'
     },
     projects: {
-      title: 'Projects — [Your Name]',
+      title: 'Projects — Sarvesh Chavan',
       description: 'Case studies including AMENDMENT LLM rule engine and high-performance Fashion Store.',
       scene: 'circuit'
     },
     skills: {
-      title: 'Skills — [Your Name]',
+      title: 'Skills — Sarvesh Chavan',
       description: 'Technical competencies across Python, FastAPI, local AI models, and creative front-end.',
       scene: 'circuit'
     },
     journey: {
-      title: 'Journey — [Your Name]',
+      title: 'Journey — Sarvesh Chavan',
       description: 'Chronological timeline of milestones, engineering experiments, and future directions.',
       scene: 'webSplit'
     },
     contact: {
-      title: 'Contact — [Your Name]',
+      title: 'Contact — Sarvesh Chavan',
       description: 'Direct contact channels, GitHub, LinkedIn, email, and resume downloads.',
       scene: 'nightcity'
     }

@@ -370,7 +370,7 @@
         approach: "Engineered a dual-engine architecture: a local Gemma model running in Ollama translates player intent into structured JSON rule contracts, while a deterministic Python state machine validates mathematical invariants before merging amendments into active gameplay.",
         stack: ["Python", "FastAPI", "Ollama", "Gemma"],
         links: {
-          github: "[github-repo-url]",
+          github: "https://github.com/sarveshchawan1000-gif",
           demo: "[demo-link]"
         },
         metrics: "Local sub-300ms inference • Zero cloud dependencies"
@@ -384,7 +384,7 @@
         approach: "Built a bespoke zero-framework storefront utilizing multi-layer CSS parallax, horizontal swipe kinematics, a high-contrast cream/black/cyan color system, and instant localized INR pricing calculations without layout shifting.",
         stack: ["HTML5", "CSS3", "JavaScript"],
         links: {
-          github: "[github-repo-url]",
+          github: "https://github.com/sarveshchawan1000-gif",
           demo: "[demo-link]"
         },
         metrics: "60fps sideways scroll • 0kB external runtime"

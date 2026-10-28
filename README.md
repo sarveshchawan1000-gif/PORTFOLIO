@@ -92,17 +92,16 @@ To add a new milestone, insert an `<article class="timeline-entry">` block:
 
 Below is the short checklist of all placeholders in the codebase to replace with your personal information:
 
-| Item | Location | Placeholder Token | Description |
+| Item | Location | Placeholder Token / Value | Description |
 | :--- | :--- | :--- | :--- |
-| **Full Name** | `index.html`, `js/router.js` | `[Your Name]` | Replace with your real name across titles, brand header, and headings. |
+| **Full Name** | `index.html`, `js/router.js` | `Sarvesh Chavan` | Configured across site titles, brand header, and headings. |
+| **GitHub URL** | `index.html`, `data/projects.json` | `https://github.com/sarveshchawan1000-gif` | Configured in contact channels and project cards. |
+| **LinkedIn URL** | `index.html` | `https://www.linkedin.com/in/sarvesh-chavan-a57080414/` | Configured in contact channels. |
 | **Email Address** | `index.html` | `[email]` | In `mailto:[email]` and button label on `#contact`. |
-| **GitHub URL** | `index.html`, `data/projects.json` | `[url]`, `[github-repo-url]` | Replace with your profile URL and project repository links. |
-| **LinkedIn URL** | `index.html` | `[url]` | Replace with your LinkedIn profile URL. |
 | **Resume File** | `index.html` | `[file]` | Replace with path to your resume PDF (e.g., `./resume.pdf`). |
 | **Project Demo Links** | `data/projects.json` | `[demo-link]` | Replace with live deployment URLs for AMENDMENT and Fashion Store. |
 | **Portfolio Domain** | `index.html` | `[portfolio-domain]` | In Open Graph meta tags (e.g., `sarveshchavan.dev`). |
 | **Timeline Years** | `index.html` | `[year]` | Under Journey section (`#view-journey`) for Foundation, First builds, AI, and Next. |
-| **Copyright Year** | `index.html` | `[year]` | In the site footer. |
 
 ---
 
