@@ -92,20 +92,14 @@
   }
 
   function getSceneForRoute(route) {
-    if (['about', 'journey'].includes(route)) return 'spiderweb';
+    if (['about', 'journey'].includes(route)) return 'webSplit';
     if (['projects', 'skills'].includes(route)) return 'circuit';
     return 'nightcity';
   }
 
   function initScenes() {
     if (window.NightCityBackground) scenes.nightcity = new window.NightCityBackground();
-    if (window.SpiderWebBackground) {
-      scenes.spiderweb = new window.SpiderWebBackground();
-      scenes.sakura = scenes.spiderweb;
-    } else if (window.SakuraBackground) {
-      scenes.spiderweb = new window.SakuraBackground();
-      scenes.sakura = scenes.spiderweb;
-    }
+    if (window.WebSplitBackground) scenes.webSplit = new window.WebSplitBackground();
     if (window.CircuitBackground) scenes.circuit = new window.CircuitBackground();
 
     // Determine initial scene from URL hash
@@ -131,6 +125,11 @@
     activeScene = scenes[sceneKey];
     if (activeScene && !activeScene.initialized) {
       activeScene.init(canvasWidth, canvasHeight);
+    }
+
+    // Trigger sweep animation on scene enter if supported
+    if (activeScene && typeof activeScene.triggerSweep === 'function') {
+      activeScene.triggerSweep();
     }
 
     // Trigger ~25 frame fade in from dark

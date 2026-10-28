@@ -13,7 +13,7 @@
     about: {
       title: 'About — [Your Name]',
       description: 'Engineering mindset, creative interests in Minecraft, Spider-Man, and anime, and working principles.',
-      scene: 'spiderweb'
+      scene: 'webSplit'
     },
     projects: {
       title: 'Projects — [Your Name]',
@@ -28,7 +28,7 @@
     journey: {
       title: 'Journey — [Your Name]',
       description: 'Chronological timeline of milestones, engineering experiments, and future directions.',
-      scene: 'spiderweb'
+      scene: 'webSplit'
     },
     contact: {
       title: 'Contact — [Your Name]',

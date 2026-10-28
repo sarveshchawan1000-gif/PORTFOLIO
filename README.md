@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# PORTFOLIO
-=======
 # Personal Engineering Portfolio
 
 A high-craft, distinctive, static personal engineering portfolio with zero external framework dependencies or build steps. Featuring an original multi-scene canvas animation system behind a clean, thin-line "spider-web" UI style.
@@ -10,7 +7,7 @@ A high-craft, distinctive, static personal engineering portfolio with zero exter
 - **Zero Build Step**: Native ES6+ JavaScript, CSS3 custom properties, and semantic HTML5.
 - **Dynamic Canvas Backgrounds**: A single unified `requestAnimationFrame` loop that seamlessly transitions between three code-drawn scenes across routes:
   - **Night City (`#home`, `#contact`)**: 3-layer parallax skyline responding to cursor offset, flickering amber windows, twinkling stars, and an interactive pendulum silk thread ending in a code-drawn red spider.
-  - **Sakura Drift (`#about`, `#journey`)**: Dusk-purple atmosphere, luminous moon with lunar mares, organic sakura branch with pink blossoms, and ~90 wind-reactive fluttering petals pushed by cursor horizontal velocity.
+  - **Web Split (`#about`, `#journey`)**: Comic-panel style diagonal split between muted red (`#611519`) and muted blue (`#162F74`) over `#090B16` with a jagged bright seam line that eases toward the cursor, tilts with pointer Y, and sweeps across on page transition. Features a centered 16-spoke, 13-ring orb web with sagging catenary ring threads, anchor threads, interactive cursor deflection, and traveling vibration pulses.
   - **Circuit Board (`#projects`, `#skills`)**: Dark green printed circuit board on a 44px grid with ~45 right-angle traces, solder pads, IC packages with pin notches, and light pulses that accelerate when near the cursor.
 - **Client-Side Hash Router**: Clean hash tokens (`#home`, `#about`, `#projects`, `#skills`, `#journey`, `#contact`), browser back/forward history support, automatic fallbacks to `#home`, dynamic SEO/Open Graph metadata updates, and keyboard navigation (Left/Right arrow keys with wrap-around).
 - **Spider-Web UI Motif**: Delicate corner spider-webs (inline SVG data-URIs) on panels, and section headings underlined with a 1px thread ending in a signature red bead (`#E23636`).
@@ -19,7 +16,7 @@ A high-craft, distinctive, static personal engineering portfolio with zero exter
   - Semantic HTML landmarks (`<header>`, `<nav>`, `<main>`, `<footer>`, `<section>`, `<article>`).
   - Full keyboard navigability with visible focus rings.
   - High-DPI canvas scaling capped at `devicePixelRatio = 2`.
-  - Automatic low-FPS detection (drops particle counts if frame rate drops below 30 fps).
+  - Automatic low-FPS detection (drops ring and particle counts if frame rate drops below 30 fps).
   - Pauses canvas loop when tab is hidden via Page Visibility API.
   - Comprehensive `prefers-reduced-motion` compliance.
 
@@ -123,8 +120,6 @@ Below is the short checklist of all placeholders in the codebase to replace with
     ├── main.js                 # Central canvas loop, DPR scaling, card tilt, typewriter
     └── backgrounds/
         ├── nightcity.js        # Night city skyline, flickering amber windows, spider pendulum
-        ├── sakura.js           # Sakura dusk sky, moon, organic branch, wind-blown petals
+        ├── webSplit.js         # Comic-panel red/blue split, jagged seam, 16-spoke orb web, pulses
         └── circuit.js          # Dark green PCB, 44px grid traces, IC chips, accelerated pulses
 ```
-
->>>>>>> fd05183 (first commit for adding basic website)
