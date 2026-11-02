@@ -300,6 +300,9 @@ class NightCityBackground {
   }
 
   drawSpiderPendulum(ctx, reducedMotion) {
+    // If unified scroll spider overlay is active (on Home page), skip drawing duplicate
+    if (window.scrollSpiderActive) return;
+
     const anchorY = 0;
     const bobX = this.anchorX + Math.sin(this.theta) * this.pendulumLength;
     const bobY = anchorY + Math.cos(this.theta) * this.pendulumLength;

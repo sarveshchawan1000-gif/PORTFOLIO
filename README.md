@@ -10,8 +10,9 @@ A high-craft, distinctive, static personal engineering portfolio with zero exter
   - **Web Split (`#about`, `#journey`)**: Comic-panel style diagonal split between muted red (`#611519`) and muted blue (`#162F74`) over `#090B16` with a jagged bright seam line that eases toward the cursor, tilts with pointer Y, and sweeps across on page transition. Features a centered 16-spoke, 13-ring orb web with sagging catenary ring threads, anchor threads, interactive cursor deflection, and traveling vibration pulses.
   - **Circuit Board (`#projects`, `#skills`)**: Dark green printed circuit board on a 44px grid with ~45 right-angle traces, solder pads, IC packages with pin notches, and light pulses that accelerate when near the cursor.
 - **Client-Side Hash Router**: Clean hash tokens (`#home`, `#about`, `#projects`, `#skills`, `#journey`, `#contact`), browser back/forward history support, automatic fallbacks to `#home`, dynamic SEO/Open Graph metadata updates, and keyboard navigation (Left/Right arrow keys with wrap-around).
-- **Spider-Web UI Motif**: Delicate corner spider-webs (inline SVG data-URIs) on panels, and section headings underlined with a 1px thread ending in a signature red bead (`#E23636`).
-- **Interactive Project Cards**: 3D tilt up to 4 degrees tracking cursor position, rendered dynamically from `data/projects.json`.
+- **Spider-Web UI Motif**: Delicate corner spider-webs (inline SVG data-URIs) on panels, section headings underlined with a 1px thread ending in a signature red bead (`#E23636`), and a geometric spider web framing the photo section on the Home page.
+- **Scroll-Driven Spider Animation (`#home`)**: On the main page, the hanging spider dynamically descends on its silk thread as you scroll down the page, landing squarely on the spider web in the Photo section. When scrolling back up, the spider detaches and climbs back up its thread with an alternating leg-stepping climbing animation to the top of the hero.
+- **Interactive Project & Skills Cards**: 3D tilt up to 4 degrees tracking cursor position, rendered dynamically from `data/projects.json`.
 - **Accessibility & Performance**:
   - Semantic HTML landmarks (`<header>`, `<nav>`, `<main>`, `<footer>`, `<section>`, `<article>`).
   - Full keyboard navigability with visible focus rings.

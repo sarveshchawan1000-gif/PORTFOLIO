@@ -46,7 +46,16 @@
     init() {
       // Listen to hash changes and browser back/forward
       window.addEventListener('hashchange', () => this.handleRoute());
-      window.addEventListener('load', () => this.handleRoute());
+      window.addEventListener('load', () => {
+        this.handleRoute();
+        // Re-fire route-changed on load so scroll spider and other listeners can initialize
+        const route = this.currentRoute || 'home';
+        if (ROUTE_META[route]) {
+          window.dispatchEvent(new CustomEvent('portfolio:route-changed', {
+            detail: { route, prevRoute: null, scene: ROUTE_META[route].scene }
+          }));
+        }
+      });
 
       // Arrow key navigation (Left/Right)
       window.addEventListener('keydown', (e) => this.handleKeydown(e));

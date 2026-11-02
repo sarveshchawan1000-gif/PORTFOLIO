@@ -34,6 +34,19 @@
   <!-- Fixed Fullscreen Background Canvas -->
   <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
+  <!-- Spider Scroll Element: silk thread + spider that descends/climbs on scroll -->
+  <div id="scroll-spider-rig" aria-hidden="true">
+    <svg id="scroll-spider-svg" xmlns="http://www.w3.org/2000/svg" overflow="visible">
+      <!-- Silk thread line drawn by JS -->
+      <line id="spider-thread" x1="50%" y1="0" x2="50%" y2="0"
+        stroke="rgba(243,241,234,0.55)" stroke-width="1"/>
+      <!-- Anchor bead at header -->
+      <circle id="spider-thread-bead" cx="50%" cy="2" r="2.5" fill="rgba(243,241,234,0.7)"/>
+    </svg>
+    <!-- Spider body (canvas-drawn equivalent in DOM for scroll) -->
+    <canvas id="scroll-spider-canvas" width="60" height="60" aria-hidden="true"></canvas>
+  </div>
+
   <div class="app-container">
     <!-- Site Header & Navigation -->
     <header class="site-header">
@@ -59,6 +72,7 @@
       
       <!-- ================= 01: HOME VIEW ================= -->
       <section id="view-home" class="page-view is-active" aria-labelledby="home-heading">
+        <!-- ── Hero ────────────────────────────────────────────────── -->
         <div class="home-hero">
           <h1 id="home-heading" class="hero-statement">
             Sarvesh Chavan builds things that <span class="emp-red">think</span>, move, and ship.
@@ -75,6 +89,112 @@
             <a href="#contact" class="btn">Get in touch &rarr;</a>
           </div>
         </div>
+
+        <!-- ── Photo / Profile Section (scrollable within home) ───── -->
+        <section class="home-profile-section" aria-label="Profile">
+          <div class="profile-photo-wrap">
+            <div class="photo-web-stage">
+              <!-- Geometric Spider Web in SVG behind the photo frame -->
+              <svg class="photo-spider-web" viewBox="0 0 340 340" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <!-- Anchor threads to outer bounds -->
+                <line x1="170" y1="170" x2="15" y2="15" stroke="rgba(243,241,234,0.18)" stroke-width="1"/>
+                <line x1="170" y1="170" x2="325" y2="15" stroke="rgba(243,241,234,0.18)" stroke-width="1"/>
+                <line x1="170" y1="170" x2="325" y2="325" stroke="rgba(243,241,234,0.18)" stroke-width="1"/>
+                <line x1="170" y1="170" x2="15" y2="325" stroke="rgba(243,241,234,0.18)" stroke-width="1"/>
+                <line x1="170" y1="170" x2="170" y2="5" stroke="rgba(243,241,234,0.22)" stroke-width="1"/>
+                <line x1="170" y1="170" x2="335" y2="170" stroke="rgba(243,241,234,0.18)" stroke-width="1"/>
+                <line x1="170" y1="170" x2="170" y2="335" stroke="rgba(243,241,234,0.18)" stroke-width="1"/>
+                <line x1="170" y1="170" x2="5" y2="170" stroke="rgba(243,241,234,0.18)" stroke-width="1"/>
+
+                <!-- 12 Radial Spokes -->
+                <line x1="170" y1="170" x2="276" y2="64" stroke="rgba(243,241,234,0.25)" stroke-width="1"/>
+                <line x1="170" y1="170" x2="300" y2="125" stroke="rgba(243,241,234,0.25)" stroke-width="1"/>
+                <line x1="170" y1="170" x2="300" y2="215" stroke="rgba(243,241,234,0.25)" stroke-width="1"/>
+                <line x1="170" y1="170" x2="276" y2="276" stroke="rgba(243,241,234,0.25)" stroke-width="1"/>
+                <line x1="170" y1="170" x2="215" y2="300" stroke="rgba(243,241,234,0.25)" stroke-width="1"/>
+                <line x1="170" y1="170" x2="125" y2="300" stroke="rgba(243,241,234,0.25)" stroke-width="1"/>
+                <line x1="170" y1="170" x2="64" y2="276" stroke="rgba(243,241,234,0.25)" stroke-width="1"/>
+                <line x1="170" y1="170" x2="40" y2="215" stroke="rgba(243,241,234,0.25)" stroke-width="1"/>
+                <line x1="170" y1="170" x2="40" y2="125" stroke="rgba(243,241,234,0.25)" stroke-width="1"/>
+                <line x1="170" y1="170" x2="64" y2="64" stroke="rgba(243,241,234,0.25)" stroke-width="1"/>
+                <line x1="170" y1="170" x2="125" y2="40" stroke="rgba(243,241,234,0.25)" stroke-width="1"/>
+                <line x1="170" y1="170" x2="215" y2="40" stroke="rgba(243,241,234,0.25)" stroke-width="1"/>
+
+                <!-- Concentric Web Rings -->
+                <circle cx="170" cy="170" r="32" stroke="rgba(243,241,234,0.32)" stroke-width="1"/>
+                <circle cx="170" cy="170" r="64" stroke="rgba(243,241,234,0.28)" stroke-width="1"/>
+                <circle cx="170" cy="170" r="100" stroke="rgba(243,241,234,0.24)" stroke-width="1"/>
+                <circle cx="170" cy="170" r="135" stroke="rgba(243,241,234,0.20)" stroke-width="1"/>
+                <circle cx="170" cy="170" r="162" stroke="rgba(243,241,234,0.16)" stroke-width="1"/>
+              </svg>
+
+              <!-- Dedicated Spider Web Landing Target Node -->
+              <div id="photo-web-landing" class="photo-web-landing-hub" title="Web landing hub">
+                <span class="landing-pulse-ring" aria-hidden="true"></span>
+                <span class="landing-center-dot" aria-hidden="true"></span>
+              </div>
+
+              <!-- Photo Frame seated within the web environment -->
+              <div class="profile-photo-frame tilt-card">
+                <div class="web-corner top-right"></div>
+                <div class="web-corner bottom-left"></div>
+                <!-- Profile Avatar Placeholder -->
+                <div class="photo-placeholder" aria-label="Profile photo of Sarvesh Chavan">
+                  <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <circle cx="60" cy="42" r="22" stroke="rgba(243,241,234,0.5)" stroke-width="1.5"/>
+                    <ellipse cx="60" cy="98" rx="36" ry="22" stroke="rgba(243,241,234,0.5)" stroke-width="1.5"/>
+                    <line x1="0" y1="0" x2="26" y2="26" stroke="rgba(243,241,234,0.25)" stroke-width="1"/>
+                    <line x1="0" y1="0" x2="0" y2="18" stroke="rgba(243,241,234,0.25)" stroke-width="1"/>
+                    <line x1="0" y1="0" x2="18" y2="0" stroke="rgba(243,241,234,0.25)" stroke-width="1"/>
+                  </svg>
+                  <span class="photo-placeholder-label">Sarvesh Chavan</span>
+                  <span class="photo-placeholder-sub text-mono">Builds &bull; Thinks &bull; Ships</span>
+                </div>
+                <!-- To display an actual image, place it in /images/ and uncomment:
+                <img src="./images/sarvesh.jpg" alt="Sarvesh Chavan" class="profile-photo-img">
+                -->
+              </div>
+            </div>
+            <!-- Indicator Label -->
+            <div class="photo-silk-hint" aria-hidden="true">
+              <span class="mono-small">// spider web anchor zone</span>
+            </div>
+          </div>
+
+          <div class="profile-bio-wrap">
+            <div class="panel profile-bio-panel tilt-card">
+              <div class="web-corner top-right"></div>
+              <div class="web-corner bottom-left"></div>
+
+              <p class="profile-name-mono text-mono">Sarvesh_Chavan.bio</p>
+              <h2 class="profile-bio-heading thread-heading">Engineer, Tinkerer, Builder</h2>
+              <p class="profile-bio-text">
+                I build software that has weight — systems with deterministic cores, physics-driven interfaces, and local AI integrations that don't depend on a cloud call to function. Equal parts backend engineer and creative technologist.
+              </p>
+
+              <div class="profile-stat-row">
+                <div class="profile-stat">
+                  <span class="stat-label text-mono">Focus</span>
+                  <span class="stat-value">Local AI &amp; Web Systems</span>
+                </div>
+                <div class="profile-stat">
+                  <span class="stat-label text-mono">Stack</span>
+                  <span class="stat-value">Python &bull; JS &bull; Canvas &bull; FastAPI</span>
+                </div>
+                <div class="profile-stat">
+                  <span class="stat-label text-mono">Mode</span>
+                  <span class="stat-value">Zero-framework, 60 fps</span>
+                </div>
+              </div>
+
+              <div class="profile-links">
+                <a href="https://github.com/sarveshchavan1000-gif" class="btn btn-subtle" target="_blank" rel="noopener">GitHub</a>
+                <a href="https://www.linkedin.com/in/sarvesh-chavan-a57080414/" class="btn btn-subtle" target="_blank" rel="noopener">LinkedIn</a>
+                <a href="mailto:sarvesh.chawan1000@gmail.com" class="btn btn-subtle">Email</a>
+              </div>
+            </div>
+          </div>
+        </section>
 
         <div class="home-highlights-grid">
           <!-- Highlight 1: Featured Project -->
@@ -547,6 +667,9 @@
 
   <!-- Main Engine Script -->
   <script src="./js/main.js"></script>
+
+  <!-- Scroll Spider -->
+  <script src="./js/scrollSpider.js"></script>
 </body>
 </html>
 
