@@ -1,18 +1,11 @@
 /**
- * scrollSpider.js — Unified Scroll-Driven Spider on Main Page
+ * scrollSpider.js — Scroll-Driven Spider (Scrollable Layout Version)
  *
- * Implements:
- * 1. At the top of the main page (scrollY === 0):
- *    Spider hangs from the ceiling on its silk thread in the hero area,
- *    swaying gently with cursor movement using pendulum physics.
- * 2. When the page is scrolled down:
- *    The silk string smoothly extends down the page. The spider descends
- *    and lands squarely on the spider web in the Photo section!
- * 3. When the page is scrolled back up:
- *    The spider detaches from the web, reels / climbs back up its silk string
- *    with crawling leg animation ("string animation") all the way back to the top!
- * 4. Active exclusively on the Home page (#view-home); suppresses duplicate
- *    canvas spider from nightcity.js via window.scrollSpiderActive.
+ * - Spider hangs from top-center of the viewport via a silk thread
+ * - As user scrolls down, thread extends and spider descends toward
+ *   the photo-web-landing element
+ * - When it lands it perches; scrolling back up reels it back up
+ * - Always active (site is now fully scrollable, single page)
  */
 (function () {
   'use strict';
@@ -22,10 +15,10 @@
   const beadEl    = document.getElementById('spider-thread-bead');
   const spiderCvs = document.getElementById('scroll-spider-canvas');
 
-  if (!rig || !spiderCvs) return;
+  if (!rig || !spiderCvs || !threadEl || !beadEl) return;
 
   const ctx = spiderCvs.getContext('2d');
-  const W   = 80, H = 80;
+  const W = 80, H = 80;
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   spiderCvs.width  = W * dpr;
   spiderCvs.height = H * dpr;
@@ -33,95 +26,69 @@
   spiderCvs.style.height = H + 'px';
   ctx.scale(dpr, dpr);
 
-  // --- Configuration ---
-  const HEADER_HEIGHT = 56;
-  const GRAVITY       = 0.0035;
-  const DAMPING       = 0.982;
+  // --- Config ---
+  const GRAVITY  = 0.0035;
+  const DAMPING  = 0.982;
 
-  // --- State ---
-  let isHomeActive   = false;
-  let rafId          = null;
-
-  // Mouse & Pendulum tracking
-  let mouseX         = window.innerWidth * 0.5;
-  let mouseY         = window.innerHeight * 0.3;
-  let anchorX        = window.innerWidth * 0.5;
-  let prevAnchorX    = window.innerWidth * 0.5;
-  let theta          = 0;
-  let omega          = 0;
-
-  // Scroll & Spider Position
-  let currentX       = window.innerWidth * 0.5;
-  let currentY       = 160;
-  let spiderAngle    = 0;
-  let targetAngle    = 0;
-  let legPhase       = 0;
-  let lastScrollY    = 0;
-  let isClimbingUp   = false;
-  let isLandedOnWeb  = false;
-  let tickCount      = 0;
-
-  // Motion preferences
+  // --- Motion preference ---
   let reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', e => {
     reducedMotion = e.matches;
   });
 
-  // --- Mouse listener ---
-  window.addEventListener('mousemove', (e) => {
+  // --- State ---
+  let mouseX = window.innerWidth * 0.5;
+  let mouseY = window.innerHeight * 0.3;
+
+  // Pendulum (for idle sway at rest position)
+  let anchorX     = window.innerWidth * 0.5;
+  let prevAnchorX = window.innerWidth * 0.5;
+  let theta = 0, omega = 0;
+
+  // Spider world position (viewport coords — always fixed)
+  let currentX = window.innerWidth * 0.5;
+  let currentY = 100;
+  let spiderAngle = 0;
+  let targetAngle = 0;
+  let legPhase = 0;
+
+  let lastScrollY   = 0;
+  let isClimbingUp  = false;
+  let isLandedOnWeb = false;
+  let rafId = null;
+
+  // Header height
+  const HEADER_H = () => (document.querySelector('.site-header')?.offsetHeight || 60);
+
+  // Mouse tracking
+  window.addEventListener('mousemove', e => {
     mouseX = e.clientX;
     mouseY = e.clientY;
   });
 
-  // --- Route management ---
-  function activate() {
-    isHomeActive = true;
-    window.scrollSpiderActive = true;
-    rig.classList.add('is-visible');
-    anchorX     = window.innerWidth * 0.5;
-    prevAnchorX = anchorX;
-    currentX    = anchorX;
-    currentY    = 160;
-    lastScrollY = window.scrollY || window.pageYOffset || 0;
-    if (!rafId) rafId = requestAnimationFrame(loop);
-  }
+  // Always show rig (site is now scrollable, spider is always active)
+  rig.classList.add('is-visible');
+  window.scrollSpiderActive = true;
 
-  function deactivate() {
-    isHomeActive = false;
-    window.scrollSpiderActive = false;
-    rig.classList.remove('is-visible');
-    if (rafId) {
-      cancelAnimationFrame(rafId);
-      rafId = null;
-    }
-    clearCanvas();
-  }
-
-  // --- Main Animation Loop ---
+  // --- Main Loop ---
   function loop() {
-    if (!isHomeActive) {
-      rafId = null;
-      return;
-    }
     rafId = requestAnimationFrame(loop);
-    tickCount++;
 
     const scrollY = window.scrollY || window.pageYOffset || 0;
     const scrollDelta = scrollY - lastScrollY;
-    if (Math.abs(scrollDelta) > 0.8) {
-      isClimbingUp = scrollDelta < 0;
-    }
+    if (Math.abs(scrollDelta) > 0.8) isClimbingUp = scrollDelta < 0;
     lastScrollY = scrollY;
 
-    // 1. Resting pendulum physics (at top of hero)
-    const baseLength = Math.min(Math.max(window.innerHeight * 0.22, 140), 190);
-    const cursorYOffset = Math.min(Math.max((mouseY - 200) * 0.2, -40), 60);
+    const headerH = HEADER_H();
+
+    // --- Idle pendulum anchor sway ---
+    const baseLength = Math.min(Math.max(window.innerHeight * 0.22, 120), 180);
+    const cursorYOffset = Math.min(Math.max((mouseY - 200) * 0.18, -40), 60);
     const effectiveLength = baseLength + cursorYOffset;
 
     if (reducedMotion) {
       anchorX = window.innerWidth * 0.5;
-      theta = 0;
-      omega = 0;
+      theta = 0; omega = 0;
     } else {
       const prev = anchorX;
       anchorX += (mouseX - anchorX) * 0.08;
@@ -132,16 +99,15 @@
       omega -= GRAVITY * Math.sin(theta);
       omega *= DAMPING;
       theta += omega;
-
-      // Clamp angle
-      if (theta > 1.2) { theta = 1.2; omega *= -0.5; }
-      if (theta < -1.2) { theta = -1.2; omega *= -0.5; }
+      if (theta > 1.1) { theta = 1.1; omega *= -0.5; }
+      if (theta < -1.1) { theta = -1.1; omega *= -0.5; }
     }
 
+    // Resting position (hanging from anchor, swaying)
     const restX = anchorX + Math.sin(theta) * effectiveLength;
-    const restY = HEADER_HEIGHT + Math.cos(theta) * effectiveLength;
+    const restY = headerH + Math.cos(theta) * effectiveLength;
 
-    // 2. Web landing calculation
+    // --- Web landing target ---
     const landingEl = document.getElementById('photo-web-landing');
     let targetX = restX;
     let targetY = restY;
@@ -149,105 +115,98 @@
 
     if (landingEl) {
       const rect = landingEl.getBoundingClientRect();
-      const webLandingX = rect.left + rect.width / 2;
-      const webLandingY = rect.top + rect.height / 2;
+      // Center of the web hub element in viewport coords
+      const webX = rect.left + rect.width / 2;
+      const webY = rect.top + rect.height / 2;
 
-      // Scroll threshold: spider arrives at web when photo section enters comfortable view
-      const targetScroll = Math.max(160, landingEl.offsetTop - window.innerHeight * 0.38);
-      scrollProgress = Math.min(1, Math.max(0, scrollY / targetScroll));
+      // Visible when webY is above 70% of the viewport height
+      const visibleThreshold = window.innerHeight * 0.70;
+      // Progress: 0 = web not yet visible, 1 = web at 30% of viewport
+      const rawProgress = 1 - Math.min(1, Math.max(0,
+        (webY - window.innerHeight * 0.30) / (visibleThreshold - window.innerHeight * 0.30)
+      ));
+      scrollProgress = rawProgress;
 
-      // Ease progress
+      // Smoothstep easing
       const eased = scrollProgress * scrollProgress * (3 - 2 * scrollProgress);
 
-      targetX = restX + (webLandingX - restX) * eased;
-      targetY = restY + (webLandingY - restY) * eased;
+      targetX = restX + (webX - restX) * eased;
+      targetY = restY + (webY - restY) * eased;
     }
 
-    isLandedOnWeb = scrollProgress >= 0.95;
+    isLandedOnWeb = scrollProgress >= 0.97;
 
-    // Smooth spider coordinate easing
+    // Ease spider toward target
     const prevX = currentX;
     const prevY = currentY;
-    const easeSpeed = isLandedOnWeb ? 0.25 : 0.12;
+    const easeSpeed = isLandedOnWeb ? 0.28 : 0.13;
     currentX += (targetX - currentX) * easeSpeed;
     currentY += (targetY - currentY) * easeSpeed;
-
     const moveDist = Math.hypot(currentX - prevX, currentY - prevY);
 
-    // 3. Spider Orientation Angle
+    // --- Spider orientation ---
     if (isLandedOnWeb) {
-      // Perched on web: face slightly upright and settle
       targetAngle = 0;
     } else if (scrollProgress > 0.08 && isClimbingUp) {
-      // Climbing back up the silk string: face upward toward ceiling
-      targetAngle = Math.PI; // Invert body to face thread
+      targetAngle = Math.PI;
     } else {
-      // Hanging down / descending: align with pendulum theta
       targetAngle = -theta * 0.8;
     }
-
-    // Smooth angle interpolation
     let diff = targetAngle - spiderAngle;
     while (diff < -Math.PI) diff += Math.PI * 2;
-    while (diff > Math.PI) diff -= Math.PI * 2;
+    while (diff >  Math.PI) diff -= Math.PI * 2;
     spiderAngle += diff * 0.15;
 
-    // 4. Leg stepping / climbing cadence
+    // --- Leg animation ---
     if (isLandedOnWeb) {
-      // Settle legs on web strands with subtle idle breathing
       legPhase += 0.02;
     } else if (moveDist > 0.2 || Math.abs(scrollDelta) > 0.5) {
-      // Active stepping/climbing along the string
       legPhase += Math.max(moveDist * 0.25, 0.18);
     } else {
-      // Hanging idle twitch
       legPhase += 0.02;
     }
 
-    // 5. Update SVG silk thread & spider position
-    updateSilkThread();
+    // --- Draw ---
+    updateThread(headerH);
     drawSpider();
   }
 
-  // --- Update SVG Thread Line ---
-  function updateSilkThread() {
-    const ay = HEADER_HEIGHT;
-    // Silk string attaches from ceiling anchorX down to spider center
-    threadEl.setAttribute('x1', anchorX);
+  // --- SVG Thread ---
+  function updateThread(headerH) {
+    // Thread always hangs from top-center of viewport (same X as anchorX after sway)
+    const ax = window.innerWidth * 0.5; // anchor is center top
+    const ay = headerH;
+
+    threadEl.setAttribute('x1', ax);
     threadEl.setAttribute('y1', ay);
     threadEl.setAttribute('x2', currentX);
     threadEl.setAttribute('y2', currentY);
 
-    beadEl.setAttribute('cx', anchorX);
+    beadEl.setAttribute('cx', ax);
     beadEl.setAttribute('cy', ay + 1.5);
 
-    // Position spider canvas centered on current coordinates
+    // Position the canvas
     spiderCvs.style.left = (currentX - W / 2) + 'px';
     spiderCvs.style.top  = (currentY - H / 2) + 'px';
   }
 
-  // --- Draw Spider on Canvas ---
-  function clearCanvas() {
-    ctx.clearRect(0, 0, W, H);
-  }
+  // --- Spider Draw ---
+  function clearCanvas() { ctx.clearRect(0, 0, W, H); }
 
   function drawSpider() {
     clearCanvas();
-
-    const cx = W / 2;
-    const cy = H / 2;
-
+    const cx = W / 2, cy = H / 2;
     ctx.save();
     ctx.translate(cx, cy);
     ctx.rotate(spiderAngle);
 
-    // Drop shadow
-    ctx.fillStyle = 'rgba(9, 11, 22, 0.38)';
+    // Shadow
+    ctx.fillStyle = 'rgba(9,11,22,0.38)';
     ctx.beginPath();
     ctx.ellipse(1, 4, 7, 10, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // 8 Jointed Spider Legs
+    // Legs
     ctx.strokeStyle = '#E23636';
     ctx.lineWidth   = 1.3;
     ctx.lineCap     = 'round';
@@ -263,29 +222,22 @@
     for (let i = 0; i < baseLegs.length; i++) {
       const leg = baseLegs[i];
       let stepOffset = 0;
-
       if (!reducedMotion) {
         if (isLandedOnWeb) {
-          // Spread legs wide onto web strands
           stepOffset = Math.sin(legPhase + i * 1.2) * 0.8;
         } else if (isClimbingUp) {
-          // Climbing animation: alternating upward reaching strides
-          const climbPhase = legPhase + (i % 2 === 0 ? 0 : Math.PI);
-          stepOffset = Math.sin(climbPhase) * 3.2;
+          stepOffset = Math.sin(legPhase + (i % 2 === 0 ? 0 : Math.PI)) * 3.2;
         } else {
-          // Descending / pendulum sway leg flex
           stepOffset = Math.sin(legPhase + i * (Math.PI / 2)) * 1.8;
         }
       }
-
-      // Left leg
+      // Left
       ctx.beginPath();
       ctx.moveTo(-2.5, leg.startY);
       ctx.lineTo(leg.kneeX + stepOffset * 0.4, leg.kneeY + stepOffset);
       ctx.lineTo(leg.footX + stepOffset, leg.footY + stepOffset * 1.2);
       ctx.stroke();
-
-      // Right leg (mirrored)
+      // Right (mirrored)
       ctx.beginPath();
       ctx.moveTo(2.5, leg.startY);
       ctx.lineTo(-leg.kneeX - stepOffset * 0.4, leg.kneeY + stepOffset);
@@ -293,59 +245,33 @@
       ctx.stroke();
     }
 
-    // Spider Abdomen (body)
+    // Abdomen
     ctx.fillStyle = '#E23636';
     ctx.beginPath();
     ctx.ellipse(0, 5.5, 5.5, 8, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Pale dorsal diamond marking on abdomen
-    ctx.fillStyle = 'rgba(243, 241, 234, 0.88)';
+    // Diamond marking
+    ctx.fillStyle = 'rgba(243,241,234,0.88)';
     ctx.beginPath();
-    ctx.moveTo(0, 2);
-    ctx.lineTo(2, 5.5);
-    ctx.lineTo(0, 9);
-    ctx.lineTo(-2, 5.5);
+    ctx.moveTo(0, 2); ctx.lineTo(2, 5.5); ctx.lineTo(0, 9); ctx.lineTo(-2, 5.5);
     ctx.closePath();
     ctx.fill();
 
-    // Cephalothorax (head)
+    // Head
     ctx.fillStyle = '#B52323';
     ctx.beginPath();
     ctx.ellipse(0, -3.5, 3.8, 4.2, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Two tiny pale eyes
+    // Eyes
     ctx.fillStyle = '#F3F1EA';
     ctx.fillRect(-1.6, -5.6, 1.2, 1.2);
-    ctx.fillRect(0.4, -5.6, 1.2, 1.2);
+    ctx.fillRect(0.4,  -5.6, 1.2, 1.2);
 
     ctx.restore();
   }
 
-  // --- Router & Load Events ---
-  window.addEventListener('portfolio:route-changed', (e) => {
-    const route = e.detail && e.detail.route;
-    if (route === 'home') {
-      activate();
-    } else {
-      deactivate();
-    }
-  });
-
-  // Handle immediate initialization if loaded on #home
-  function checkInitialRoute() {
-    const hash = window.location.hash.replace(/^#\/?/, '').trim().toLowerCase();
-    if (!hash || hash === 'home') {
-      activate();
-    } else {
-      deactivate();
-    }
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', checkInitialRoute);
-  } else {
-    checkInitialRoute();
-  }
+  // Start immediately
+  rafId = requestAnimationFrame(loop);
 })();

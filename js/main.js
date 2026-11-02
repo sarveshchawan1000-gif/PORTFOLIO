@@ -17,11 +17,11 @@
   const FADE_TRANSITION_FRAMES = 25;
 
   const TYPEWRITER_PHRASES = [
-    'Software engineer in progress',
-    'Game systems tinkerer',
-    'Local AI experimenter',
-    'Web builder'
+    '1st-year B.Tech CSE (AI/ML) student',
+    'Front-end developer',
+    'Web interface builder'
   ];
+  window.TYPEWRITER_PHRASES = TYPEWRITER_PHRASES;
 
   let canvas, ctx;
   let dpr = 1;
@@ -55,7 +55,6 @@
     initCanvas();
     initScenes();
     bindEvents();
-    loadProjects();
     initTypewriter();
     initFeaturedProject();
     bindTiltToCards();
@@ -160,7 +159,7 @@
       }
     }, { passive: true });
 
-    // Route change listener from router.js
+    // Route change listener from router.js (scroll-based, keeps bg in sync)
     window.addEventListener('portfolio:route-changed', (e) => {
       const { scene } = e.detail;
       if (scene) {
@@ -257,6 +256,7 @@
       });
     });
   }
+  window.bindTiltToCards = bindTiltToCards;
 
   // --- Projects Data Fetching & Rendering ---
   async function loadProjects() {

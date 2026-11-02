@@ -1,117 +1,156 @@
 /**
- * Hash Router with keyboard navigation, history support, and metadata management
+ * Scroll-based Router
+ * - Nav links smooth-scroll to sections (all always visible)
+ * - IntersectionObserver updates active nav link as user scrolls
+ * - Background canvas switches based on which section is most visible
+ * - Hash in URL is kept in sync for bookmarking
  */
 (function() {
   const ROUTES = ['home', 'about', 'projects', 'skills', 'journey', 'contact'];
 
   const ROUTE_META = {
     home: {
-      title: 'Sarvesh Chavan — Builds things that think, move, and ship',
-      description: 'Personal engineering portfolio of Sarvesh Chavan. Local AI, board game rule engines, and creative web engineering.',
+      title: 'Sarvesh Chavan — 1st-Year B.Tech CSE (AI/ML) & Front-End Developer',
+      description: 'Personal portfolio of Sarvesh Chavan. 1st-year B.Tech CSE (AI/ML) student focusing on front-end development, responsive web design, and accessible interfaces.',
       scene: 'nightcity'
     },
     about: {
       title: 'About — Sarvesh Chavan',
-      description: 'Engineering mindset, creative interests in Minecraft, Spider-Man, and anime, and working principles.',
+      description: 'About Sarvesh Chavan — 1st-year B.Tech CSE (AI/ML) student, front-end developer, with interests in ground sports, Minecraft, and anime.',
       scene: 'webSplit'
     },
     projects: {
       title: 'Projects — Sarvesh Chavan',
-      description: 'Case studies including AMENDMENT LLM rule engine and high-performance Fashion Store.',
+      description: 'Front-end web applications and interfaces by Sarvesh Chavan, including AMENDMENT (Hacktoberfest Winner at NST) and Zip Up Nation.',
       scene: 'circuit'
     },
     skills: {
       title: 'Skills — Sarvesh Chavan',
-      description: 'Technical competencies across Python, FastAPI, local AI models, and creative front-end.',
+      description: 'Technical competencies in HTML5, CSS3, JavaScript, responsive layouts, Canvas 2D, and web accessibility.',
       scene: 'circuit'
     },
     journey: {
       title: 'Journey — Sarvesh Chavan',
-      description: 'Chronological timeline of milestones, engineering experiments, and future directions.',
+      description: 'Chronological timeline of academic milestones, front-end builds, and hackathon wins.',
       scene: 'webSplit'
     },
     contact: {
       title: 'Contact — Sarvesh Chavan',
-      description: 'Direct contact channels, GitHub, LinkedIn, email, and resume downloads.',
+      description: 'Get in touch with Sarvesh Chavan for mentorship, internships, and front-end development collaborations.',
       scene: 'nightcity'
     }
   };
 
   class Router {
     constructor() {
-      this.currentRoute = null;
+      this.currentRoute = 'home';
+      this.scrollTimer = null;
       this.init();
     }
 
     init() {
-      // Listen to hash changes and browser back/forward
-      window.addEventListener('hashchange', () => this.handleRoute());
+      // Wire nav links to smooth-scroll
+      document.querySelectorAll('a.nav-link[href^="#"], a.pagination-link[href^="#"]').forEach(link => {
+        link.addEventListener('click', e => {
+          const href = link.getAttribute('href');
+          const route = href.replace(/^#\/?/, '').trim().toLowerCase();
+          if (ROUTES.includes(route)) {
+            e.preventDefault();
+            this.scrollTo(route);
+          }
+        });
+      });
+
+      // Also wire brand logo
+      const brand = document.querySelector('.site-brand[href^="#"]');
+      if (brand) {
+        brand.addEventListener('click', e => {
+          e.preventDefault();
+          this.scrollTo('home');
+        });
+      }
+
+      // Set up IntersectionObserver to track which section is in view
+      this.setupObserver();
+
+      // Handle initial hash on load
       window.addEventListener('load', () => {
-        this.handleRoute();
-        // Re-fire route-changed on load so scroll spider and other listeners can initialize
-        const route = this.currentRoute || 'home';
-        if (ROUTE_META[route]) {
-          window.dispatchEvent(new CustomEvent('portfolio:route-changed', {
-            detail: { route, prevRoute: null, scene: ROUTE_META[route].scene }
-          }));
+        const initialHash = window.location.hash.replace(/^#\/?/, '').trim().toLowerCase();
+        if (ROUTES.includes(initialHash) && initialHash !== 'home') {
+          // Small delay to allow layout to settle
+          setTimeout(() => this.scrollTo(initialHash, false), 80);
+        } else {
+          this.activate('home', null);
         }
       });
 
-      // Arrow key navigation (Left/Right)
-      window.addEventListener('keydown', (e) => this.handleKeydown(e));
+      // Arrow key navigation
+      window.addEventListener('keydown', e => this.handleKeydown(e));
+
+      // Handle hash change from browser back/forward
+      window.addEventListener('hashchange', () => {
+        const route = window.location.hash.replace(/^#\/?/, '').trim().toLowerCase();
+        if (ROUTES.includes(route)) {
+          this.scrollTo(route, false);
+        }
+      });
     }
 
-    getRouteFromHash() {
-      const raw = window.location.hash.replace(/^#\/?/, '').trim().toLowerCase();
-      if (ROUTES.includes(raw)) {
-        return raw;
-      }
-      return 'home';
+    scrollTo(route, smooth = true) {
+      const section = document.getElementById(`view-${route}`);
+      if (!section) return;
+      const headerH = document.querySelector('.site-header')?.offsetHeight || 60;
+      const top = section.getBoundingClientRect().top + window.scrollY - headerH;
+      window.scrollTo({ top, behavior: smooth ? 'smooth' : 'instant' });
     }
 
-    handleRoute() {
-      const route = this.getRouteFromHash();
+    setupObserver() {
+      const headerH = document.querySelector('.site-header')?.offsetHeight || 60;
 
-      // If URL hash was invalid or empty, normalize it without triggering infinite event
-      if (window.location.hash !== `#${route}`) {
-        window.history.replaceState(null, '', `#${route}`);
-      }
+      // Use a rootMargin that fires when the section crosses ~30% into the viewport
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const route = entry.target.id.replace('view-', '');
+            if (ROUTES.includes(route) && route !== this.currentRoute) {
+              this.activate(route, entry.target);
+            }
+          }
+        });
+      }, {
+        rootMargin: `-${headerH + 10}px 0px -55% 0px`,
+        threshold: 0
+      });
 
+      ROUTES.forEach(route => {
+        const el = document.getElementById(`view-${route}`);
+        if (el) observer.observe(el);
+      });
+    }
+
+    activate(route, _el) {
       if (this.currentRoute === route) return;
-
-      const prevRoute = this.currentRoute;
+      const prev = this.currentRoute;
       this.currentRoute = route;
 
-      this.updateDOM(route);
+      this.updateNav(route);
       this.updateMetadata(route);
 
-      // Dispatch route change event for canvas background transitions
+      // Update URL hash without triggering a scroll
+      history.replaceState(null, '', `#${route}`);
+
+      // Dispatch event so canvas background can switch
       window.dispatchEvent(new CustomEvent('portfolio:route-changed', {
         detail: {
           route,
-          prevRoute,
-          scene: ROUTE_META[route].scene
+          prevRoute: prev,
+          scene: (ROUTE_META[route] || {}).scene || 'nightcity'
         }
       }));
     }
 
-    updateDOM(route) {
-      // Toggle view visibility
-      const views = document.querySelectorAll('.page-view');
-      views.forEach(view => {
-        const isTarget = view.id === `view-${route}`;
-        if (isTarget) {
-          view.removeAttribute('hidden');
-          view.classList.add('is-active');
-        } else {
-          view.setAttribute('hidden', '');
-          view.classList.remove('is-active');
-        }
-      });
-
-      // Update Nav active state
-      const navLinks = document.querySelectorAll('.nav-link');
-      navLinks.forEach(link => {
+    updateNav(route) {
+      document.querySelectorAll('.nav-link[data-route]').forEach(link => {
         const target = link.getAttribute('data-route');
         if (target === route) {
           link.classList.add('active');
@@ -121,55 +160,37 @@
           link.removeAttribute('aria-current');
         }
       });
-
-      // Reset scroll position to top
-      window.scrollTo(0, 0);
     }
 
     updateMetadata(route) {
       const meta = ROUTE_META[route];
       if (!meta) return;
-
       document.title = meta.title;
-
-      let metaDesc = document.querySelector('meta[name="description"]');
-      if (metaDesc) {
-        metaDesc.setAttribute('content', meta.description);
-      }
-
-      let ogTitle = document.querySelector('meta[property="og:title"]');
-      if (ogTitle) {
-        ogTitle.setAttribute('content', meta.title);
-      }
-
-      let ogDesc = document.querySelector('meta[property="og:description"]');
-      if (ogDesc) {
-        ogDesc.setAttribute('content', meta.description);
-      }
+      const desc = document.querySelector('meta[name="description"]');
+      if (desc) desc.setAttribute('content', meta.description);
+      const ogTitle = document.querySelector('meta[property="og:title"]');
+      if (ogTitle) ogTitle.setAttribute('content', meta.title);
+      const ogDesc = document.querySelector('meta[property="og:description"]');
+      if (ogDesc) ogDesc.setAttribute('content', meta.description);
+      const ogUrl = document.querySelector('meta[property="og:url"]');
+      if (ogUrl) ogUrl.setAttribute('content', `https://portfolio-20-beryl.vercel.app/#${route}`);
     }
 
     navigate(direction) {
-      const currentIndex = ROUTES.indexOf(this.currentRoute || 'home');
-      let targetIndex;
-      if (direction === 'next') {
-        targetIndex = (currentIndex + 1) % ROUTES.length;
-      } else {
-        targetIndex = (currentIndex - 1 + ROUTES.length) % ROUTES.length;
-      }
-      window.location.hash = `#${ROUTES[targetIndex]}`;
+      const idx = ROUTES.indexOf(this.currentRoute || 'home');
+      let next = direction === 'next'
+        ? (idx + 1) % ROUTES.length
+        : (idx - 1 + ROUTES.length) % ROUTES.length;
+      this.scrollTo(ROUTES[next]);
     }
 
     handleKeydown(e) {
-      // Ignore if user is interacting with form controls or editable elements
-      const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
-      if (['input', 'textarea', 'select'].includes(tag) || e.target.isContentEditable) {
-        return;
-      }
-
-      if (e.key === 'ArrowRight') {
+      const tag = (e.target?.tagName || '').toLowerCase();
+      if (['input', 'textarea', 'select'].includes(tag) || e.target?.isContentEditable) return;
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
         e.preventDefault();
         this.navigate('next');
-      } else if (e.key === 'ArrowLeft') {
+      } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
         e.preventDefault();
         this.navigate('prev');
       }
@@ -178,4 +199,3 @@
 
   window.portfolioRouter = new Router();
 })();
-

@@ -3,18 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sarvesh Chavan — Builds things that think, move, and ship</title>
+  <title>Sarvesh Chavan — 1st-Year B.Tech CSE (AI/ML) &amp; Front-End Developer</title>
   
-  <meta name="description" content="Personal engineering portfolio of Sarvesh Chavan. Local AI, board game rule engines, and creative web engineering.">
+  <meta name="description" content="Personal portfolio of Sarvesh Chavan. 1st-year B.Tech CSE (AI/ML) student focusing on front-end development, responsive web design, and accessible interfaces.">
   <meta name="author" content="Sarvesh Chavan">
   <meta name="theme-color" content="#090B16">
 
   <!-- Open Graph / Meta -->
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://github.com/sarveshchawan1000-gif/PORTFOLIO">
-  <meta property="og:title" content="Sarvesh Chavan — Builds things that think, move, and ship">
-  <meta property="og:description" content="Personal engineering portfolio representing systems, local AI experimentation, and high-craft creative front-end.">
-  <meta property="og:image" content="./favicon.svg">
+  <meta property="og:url" content="https://portfolio-20-beryl.vercel.app/">
+  <meta property="og:title" content="Sarvesh Chavan — 1st-Year B.Tech CSE (AI/ML) &amp; Front-End Developer">
+  <meta property="og:description" content="1st-year B.Tech CSE (AI/ML) student focusing on front-end development, building responsive, accessible web interfaces.">
+  <meta property="og:image" content="https://portfolio-20-beryl.vercel.app/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
@@ -63,6 +65,9 @@
           <a href="#skills" class="nav-link" data-route="skills">04 // Skills</a>
           <a href="#journey" class="nav-link" data-route="journey">05 // Journey</a>
           <a href="#contact" class="nav-link" data-route="contact">06 // Contact</a>
+          <button id="open-editor-btn" class="nav-link nav-edit-btn" type="button" aria-haspopup="dialog" aria-expanded="false" title="Edit content without touching HTML (or visit #edit)">
+            <span aria-hidden="true">&#x270E;</span> Edit
+          </button>
         </nav>
       </div>
     </header>
@@ -71,21 +76,24 @@
     <main id="content" tabindex="-1">
       
       <!-- ================= 01: HOME VIEW ================= -->
-      <section id="view-home" class="page-view is-active" aria-labelledby="home-heading">
+      <section id="view-home" class="page-view" aria-labelledby="home-heading">
         <!-- ── Hero ────────────────────────────────────────────────── -->
         <div class="home-hero">
-          <h1 id="home-heading" class="hero-statement">
-            Sarvesh Chavan builds things that <span class="emp-red">think</span>, move, and ship.
+          <h1 id="home-name-heading" class="hero-statement">
+            Sarvesh Chavan
           </h1>
+          <p id="home-tagline-text" class="hero-subsentence">
+            1st-year B.Tech CSE (AI/ML) student focusing on front-end development, building responsive, accessible web interfaces.
+          </p>
 
           <div class="typewriter-line" aria-live="polite">
             <span class="text-mono">&gt;&nbsp;</span>
-            <span id="role-typewriter">Software engineer in progress</span>
+            <span id="role-typewriter">1st-year B.Tech CSE (AI/ML) student</span>
             <span class="typewriter-cursor" aria-hidden="true"></span>
           </div>
 
           <div class="cta-group">
-            <a href="#projects" class="btn btn-primary">See the builds &rarr;</a>
+            <a href="#projects" class="btn btn-primary">See my projects &rarr;</a>
             <a href="#contact" class="btn">Get in touch &rarr;</a>
           </div>
         </div>
@@ -167,23 +175,23 @@
               <div class="web-corner bottom-left"></div>
 
               <p class="profile-name-mono text-mono">Sarvesh_Chavan.bio</p>
-              <h2 class="profile-bio-heading thread-heading">Engineer, Tinkerer, Builder</h2>
-              <p class="profile-bio-text">
-                I build software that has weight — systems with deterministic cores, physics-driven interfaces, and local AI integrations that don't depend on a cloud call to function. Equal parts backend engineer and creative technologist.
+              <h2 class="profile-bio-heading thread-heading">Front-End Developer</h2>
+              <p id="home-bio-text" class="profile-bio-text">
+                I am Sarvesh Chavan, a 1st-year B.Tech CSE (AI/ML) student with a strong focus on front-end development. I enjoy building responsive, clean user interfaces and interactive web experiences.
               </p>
 
               <div class="profile-stat-row">
                 <div class="profile-stat">
                   <span class="stat-label text-mono">Focus</span>
-                  <span class="stat-value">Local AI &amp; Web Systems</span>
+                  <span id="stat-focus-value" class="stat-value">Frontend Development</span>
                 </div>
                 <div class="profile-stat">
-                  <span class="stat-label text-mono">Stack</span>
-                  <span class="stat-value">Python &bull; JS &bull; Canvas &bull; FastAPI</span>
+                  <span class="stat-label text-mono">Studying</span>
+                  <span id="stat-study-value" class="stat-value">B.Tech CSE (AI/ML) - 1st Year</span>
                 </div>
                 <div class="profile-stat">
-                  <span class="stat-label text-mono">Mode</span>
-                  <span class="stat-value">Zero-framework, 60 fps</span>
+                  <span class="stat-label text-mono">Interests</span>
+                  <span class="stat-value">Minecraft &bull; Anime &bull; Sports</span>
                 </div>
               </div>
 
@@ -196,34 +204,8 @@
           </div>
         </section>
 
-        <div class="home-highlights-grid">
-          <!-- Highlight 1: Featured Project -->
-          <a href="#projects" class="panel highlight-tile" aria-label="Featured Project: AMENDMENT">
-            <div class="web-corner top-right"></div>
-            <div class="web-corner bottom-left"></div>
-            <div>
-              <span class="highlight-label">Featured Build</span>
-              <h2 class="highlight-title thread-heading">AMENDMENT: Dynamic Rule Engine</h2>
-              <p class="highlight-desc">
-                A tabletop game where players rewrite rules mid-match. Local Gemma via Ollama parses natural language amendments while a deterministic Python engine enforces invariants.
-              </p>
-            </div>
-            <span class="tile-arrow">Inspect case study &rarr;</span>
-          </a>
-
-          <!-- Highlight 2: Journey -->
-          <a href="#journey" class="panel highlight-tile" aria-label="Career Journey Overview">
-            <div class="web-corner top-right"></div>
-            <div class="web-corner bottom-left"></div>
-            <div>
-              <span class="highlight-label">Evolution</span>
-              <h2 class="highlight-title thread-heading">Engineering Journey</h2>
-              <p class="highlight-desc">
-                From low-level computing foundations to client-side physics engines and local LLM orchestration. Follow the progression across milestones.
-              </p>
-            </div>
-            <span class="tile-arrow">View timeline thread &rarr;</span>
-          </a>
+        <!-- Highlights Grid: Populated dynamically from /data/content.json -->
+        <div id="home-highlights-container" class="home-highlights-grid" aria-live="polite">
         </div>
 
         <!-- Wrap-around Pagination -->
@@ -235,7 +217,7 @@
       </section>
 
       <!-- ================= 02: ABOUT VIEW ================= -->
-      <section id="view-about" class="page-view" hidden aria-labelledby="about-heading">
+      <section id="view-about" class="page-view" aria-labelledby="about-heading">
         <div class="about-grid">
           <!-- Bio & Core Story -->
           <article class="panel">
@@ -243,24 +225,19 @@
             <div class="web-corner bottom-left"></div>
 
             <h1 id="about-heading" class="thread-heading">About Sarvesh Chavan</h1>
-            <p class="bio-lead">
-              I am an engineer focused on the intersection of deterministic logic, local intelligence, and creative web interactions.
+            <p id="about-lead-text" class="bio-lead">
+              I am Sarvesh Chavan, a 1st-year B.Tech CSE (AI/ML) student with a strong focus on front-end development.
             </p>
-            <p class="bio-body">
-              I treat software as a physical craft: every interface must have kinematic weight, every backend must remain mathematically sound, and every system should be built without unnecessary bloat. My background spans building local AI integrations with small open weights models, authoring custom canvas simulations, and architecting zero-runtime frontend applications.
+            <p id="about-body-text" class="bio-body">
+              I enjoy crafting clean, responsive, and accessible web interfaces from first principles. I focus on semantic HTML, modern CSS, and vanilla JavaScript without unnecessary complexity. Outside of coding, I enjoy playing ground sports, building in Minecraft, and watching anime.
             </p>
 
-            <h2 class="label-heading">Creative inspirations &amp; systems</h2>
-            <div class="chips-container" aria-label="Creative interests">
-              <span class="interest-chip">
-                <span class="chip-tag">#</span> Minecraft: redstone logic &amp; emergent systems
-              </span>
-              <span class="interest-chip">
-                <span class="chip-tag">#</span> Spider-Man: web dynamics &amp; agile locomotion
-              </span>
-              <span class="interest-chip">
-                <span class="chip-tag">#</span> Anime: kinetic cinematography &amp; deliberate craft
-              </span>
+            <h2 class="label-heading">Interests &amp; Activities</h2>
+            <div id="about-interests-chips" class="chips-container" aria-label="Interests">
+              <span class="interest-chip"><span class="chip-tag">#</span> Frontend development</span>
+              <span class="interest-chip"><span class="chip-tag">#</span> Ground sports</span>
+              <span class="interest-chip"><span class="chip-tag">#</span> Minecraft</span>
+              <span class="interest-chip"><span class="chip-tag">#</span> Anime</span>
             </div>
           </article>
 
@@ -270,29 +247,29 @@
             <div class="web-corner bottom-left"></div>
 
             <h2 class="thread-heading">How I work</h2>
-            <div class="principles-list">
+            <div id="about-principles-list" class="principles-list">
               <div class="principle-item">
-                <h3 class="principle-title">1. Plan it</h3>
+                <h3 class="principle-title">1. Structure &amp; Accessibility First</h3>
                 <p class="principle-desc">
-                  Model failure modes, define data contracts, and anticipate edge cases before touching the keyboard.
+                  Prioritize semantic HTML landmarks, clear readable typography, and complete keyboard navigability.
                 </p>
               </div>
               <div class="principle-item">
-                <h3 class="principle-title">2. Build it small</h3>
+                <h3 class="principle-title">2. Build Small &amp; Test Often</h3>
                 <p class="principle-desc">
-                  Construct small, deterministic units that can be tested in isolation and composed without friction.
+                  Construct modular, tested components and responsive layouts that adapt smoothly across all screen sizes.
                 </p>
               </div>
               <div class="principle-item">
-                <h3 class="principle-title">3. Keep it honest</h3>
+                <h3 class="principle-title">3. Keep It Honest</h3>
                 <p class="principle-desc">
-                  Measure actual frame rates, profile memory, verify invariants, and avoid cargo-cult dependencies.
+                  Show ground-truth code and real implementations rather than superficial percentage bars or inflated claims.
                 </p>
               </div>
             </div>
 
             <div style="margin-top: 2rem;">
-              <a href="#projects" class="btn btn-primary" style="width: 100%;">View technical builds &rarr;</a>
+              <a href="#projects" class="btn btn-primary" style="width: 100%;">View my projects &rarr;</a>
             </div>
           </aside>
         </div>
@@ -306,17 +283,16 @@
       </section>
 
       <!-- ================= 03: PROJECTS VIEW ================= -->
-      <section id="view-projects" class="page-view" hidden aria-labelledby="projects-heading">
+      <section id="view-projects" class="page-view" aria-labelledby="projects-heading">
         <div class="projects-intro">
-          <h1 id="projects-heading" class="thread-heading">Engineered builds</h1>
+          <h1 id="projects-heading" class="thread-heading">Projects</h1>
           <p class="text-muted">
-            Case studies detailing real problems, architectural decisions, and production metrics. Loaded dynamically from <code>projects.json</code>.
+            Front-end web applications and interfaces I have designed and built. Loaded dynamically from <code>/data/content.json</code>.
           </p>
         </div>
 
-        <!-- Dynamic Container for Projects + Next Build -->
+        <!-- Dynamic Container for Projects (populated by js/content.js) -->
         <div id="projects-container" class="projects-grid" aria-live="polite">
-          <!-- Rendered dynamically by js/main.js -->
         </div>
 
         <div style="text-align: center; margin: 2rem 0;">
@@ -332,161 +308,16 @@
       </section>
 
       <!-- ================= 04: SKILLS VIEW ================= -->
-      <section id="view-skills" class="page-view" hidden aria-labelledby="skills-heading">
+      <section id="view-skills" class="page-view" aria-labelledby="skills-heading">
         <div style="margin-bottom: 2rem;">
           <h1 id="skills-heading" class="thread-heading">Technical competencies</h1>
           <p class="text-muted">
-            Ground truth capabilities organized by functional domain. Evaluated through production implementations, not arbitrary percentage bars.
+            Capabilities grounded in actual front-end projects, coursework, and ongoing studies.
           </p>
         </div>
 
-        <div class="skills-grid">
-          <!-- Panel 1: Languages -->
-          <div class="panel tilt-card">
-            <div class="web-corner top-right"></div>
-            <div class="web-corner bottom-left"></div>
-            <h2 class="skill-panel-title thread-heading">Languages</h2>
-            <ul class="skill-list">
-              <li class="skill-item">
-                <span class="skill-name">Python</span>
-                <span class="skill-context">FastAPI, AST, rules logic</span>
-              </li>
-              <li class="skill-item">
-                <span class="skill-name">JavaScript</span>
-                <span class="skill-context">Vanilla ES6+, Web APIs, Wasm</span>
-              </li>
-              <li class="skill-item">
-                <span class="skill-name">HTML5</span>
-                <span class="skill-context">Semantic landmarks, a11y</span>
-              </li>
-              <li class="skill-item">
-                <span class="skill-name">CSS3</span>
-                <span class="skill-context">Custom properties, 3D math, layout</span>
-              </li>
-            </ul>
-          </div>
-
-          <!-- Panel 2: Backend -->
-          <div class="panel tilt-card">
-            <div class="web-corner top-right"></div>
-            <div class="web-corner bottom-left"></div>
-            <h2 class="skill-panel-title thread-heading">Backend</h2>
-            <ul class="skill-list">
-              <li class="skill-item">
-                <span class="skill-name">FastAPI</span>
-                <span class="skill-context">Async IO, OpenAPI, Pydantic</span>
-              </li>
-              <li class="skill-item">
-                <span class="skill-name">REST Design</span>
-                <span class="skill-context">Stateless contracts, HTTP semantics</span>
-              </li>
-              <li class="skill-item">
-                <span class="skill-name">Rules Engines</span>
-                <span class="skill-context">State machine invariants, verification</span>
-              </li>
-              <li class="skill-item">
-                <span class="skill-name">Local Daemons</span>
-                <span class="skill-context">Background process monitoring</span>
-              </li>
-            </ul>
-          </div>
-
-          <!-- Panel 3: AI -->
-          <div class="panel tilt-card">
-            <div class="web-corner top-right"></div>
-            <div class="web-corner bottom-left"></div>
-            <h2 class="skill-panel-title thread-heading">AI &amp; Local Models</h2>
-            <ul class="skill-list">
-              <li class="skill-item">
-                <span class="skill-name">Local LLMs</span>
-                <span class="skill-context">Quantized weights, edge execution</span>
-              </li>
-              <li class="skill-item">
-                <span class="skill-name">Ollama</span>
-                <span class="skill-context">CLI orchestration, model serving</span>
-              </li>
-              <li class="skill-item">
-                <span class="skill-name">Prompt Design</span>
-                <span class="skill-context">Constrained JSON grammars</span>
-              </li>
-              <li class="skill-item">
-                <span class="skill-name">Gemma</span>
-                <span class="skill-context">Fine-tuning &amp; rule parsing</span>
-              </li>
-            </ul>
-          </div>
-
-          <!-- Panel 4: Frontend -->
-          <div class="panel tilt-card">
-            <div class="web-corner top-right"></div>
-            <div class="web-corner bottom-left"></div>
-            <h2 class="skill-panel-title thread-heading">Frontend &amp; Graphics</h2>
-            <ul class="skill-list">
-              <li class="skill-item">
-                <span class="skill-name">Canvas Animation</span>
-                <span class="skill-context">RAF loops, DPR math, physics</span>
-              </li>
-              <li class="skill-item">
-                <span class="skill-name">Parallax Engines</span>
-                <span class="skill-context">Multi-layer coordinate projection</span>
-              </li>
-              <li class="skill-item">
-                <span class="skill-name">Responsive Layout</span>
-                <span class="skill-context">Mobile-first, fluid scales</span>
-              </li>
-              <li class="skill-item">
-                <span class="skill-name">Kinetic UI</span>
-                <span class="skill-context">3D card tilt &amp; vector art</span>
-              </li>
-            </ul>
-          </div>
-
-          <!-- Panel 5: Practice -->
-          <div class="panel tilt-card">
-            <div class="web-corner top-right"></div>
-            <div class="web-corner bottom-left"></div>
-            <h2 class="skill-panel-title thread-heading">Practice</h2>
-            <ul class="skill-list">
-              <li class="skill-item">
-                <span class="skill-name">PRDs &amp; Specs</span>
-                <span class="skill-context">Architecture roadmaps, invariants</span>
-              </li>
-              <li class="skill-item">
-                <span class="skill-name">System Design</span>
-                <span class="skill-context">Modularity, decoupled components</span>
-              </li>
-              <li class="skill-item">
-                <span class="skill-name">Accessibility</span>
-                <span class="skill-context">WCAG 2.1 AA, screen-reader flow</span>
-              </li>
-              <li class="skill-item">
-                <span class="skill-name">Performance</span>
-                <span class="skill-context">60fps budgets, battery economy</span>
-              </li>
-            </ul>
-          </div>
-
-          <!-- Panel 6: Learning Next -->
-          <div class="panel learning-next-panel tilt-card">
-            <div class="web-corner top-right"></div>
-            <div class="web-corner bottom-left"></div>
-            <div class="learning-next-badge">Exploration Frontier</div>
-            <h2 class="skill-panel-title thread-heading">Learning Next</h2>
-            <ul class="skill-list">
-              <li class="skill-item">
-                <span class="skill-name">WebAssembly (Wasm)</span>
-                <span class="skill-context">Rust-compiled simulation kernels</span>
-              </li>
-              <li class="skill-item">
-                <span class="skill-name">Local Agent Routing</span>
-                <span class="skill-context">Autonomous deterministic tool use</span>
-              </li>
-              <li class="skill-item">
-                <span class="skill-name">Custom Shaders</span>
-                <span class="skill-context">Raw WebGL fragment pipelines</span>
-              </li>
-            </ul>
-          </div>
+        <!-- Dynamic Container for Skills (populated by js/content.js) -->
+        <div id="skills-container" class="skills-grid" aria-live="polite">
         </div>
 
         <div style="text-align: center; margin: 2rem 0;">
@@ -502,55 +333,16 @@
       </section>
 
       <!-- ================= 05: JOURNEY VIEW ================= -->
-      <section id="view-journey" class="page-view" hidden aria-labelledby="journey-heading">
+      <section id="view-journey" class="page-view" aria-labelledby="journey-heading">
         <div style="margin-bottom: 2rem;">
           <h1 id="journey-heading" class="thread-heading">Engineering journey</h1>
           <p class="text-muted">
-            A chronological timeline of technical evolutions, core breakthroughs, and project milestones.
+            A chronological timeline of academic milestones, builds, and hackathons. Loaded dynamically from <code>/data/content.json</code>.
           </p>
         </div>
 
-        <!-- Single vertical thread timeline -->
-        <div class="timeline-container">
-          <!-- Entry 1: Foundation -->
-          <article class="timeline-entry">
-            <div class="timeline-bead" aria-hidden="true"></div>
-            <div class="timeline-date">[year]</div>
-            <h2 class="timeline-title thread-heading">Foundation</h2>
-            <p class="timeline-body">
-              Started deep exploration of foundational computer science: discrete mathematics, memory models, deterministic state automata, and core algorithmic problem solving. Built first command-line utilities and interactive logic tools.
-            </p>
-          </article>
-
-          <!-- Entry 2: First builds -->
-          <article class="timeline-entry">
-            <div class="timeline-bead" aria-hidden="true"></div>
-            <div class="timeline-date">[year]</div>
-            <h2 class="timeline-title thread-heading">First builds</h2>
-            <p class="timeline-body">
-              Transitioned to building interactive user interfaces and web applications from first principles. Refused heavy frameworks to master raw DOM APIs, 2D HTML canvas graphics, physics simulations, and responsive typographic systems.
-            </p>
-          </article>
-
-          <!-- Entry 3: AI and games -->
-          <article class="timeline-entry">
-            <div class="timeline-bead" aria-hidden="true"></div>
-            <div class="timeline-date">[year]</div>
-            <h2 class="timeline-title thread-heading">AI and games</h2>
-            <p class="timeline-body">
-              Combined game mechanics with modern AI engineering. Conceived and built AMENDMENT: utilizing local Gemma models via Ollama to generate dynamic rule changes while anchoring game state to a deterministic Python rules engine.
-            </p>
-          </article>
-
-          <!-- Entry 4: Next -->
-          <article class="timeline-entry">
-            <div class="timeline-bead" aria-hidden="true"></div>
-            <div class="timeline-date">[year]</div>
-            <h2 class="timeline-title thread-heading">Next</h2>
-            <p class="timeline-body">
-              Stepping into production distributed systems, client-side WebAssembly compute kernels, and autonomous local multi-agent simulations. Committed to shipping software that moves smoothly, thinks locally, and lasts.
-            </p>
-          </article>
+        <!-- Dynamic Single Vertical Thread Timeline (populated by js/content.js) -->
+        <div id="journey-container" class="timeline-container" aria-live="polite">
         </div>
 
         <div style="text-align: center; margin: 2rem 0;">
@@ -566,11 +358,11 @@
       </section>
 
       <!-- ================= 06: CONTACT VIEW ================= -->
-      <section id="view-contact" class="page-view" hidden aria-labelledby="contact-heading">
+      <section id="view-contact" class="page-view" aria-labelledby="contact-heading">
         <div style="margin-bottom: 2rem;">
           <h1 id="contact-heading" class="thread-heading">Get in touch</h1>
           <p class="text-muted">
-            Direct channels for engineering opportunities, technical discussions, and collaborative builds.
+            Direct channels for mentorship, summer internships, and front-end collaborations.
           </p>
         </div>
 
@@ -583,19 +375,19 @@
             <div>
               <div class="availability-status">
                 <span class="availability-dot" aria-hidden="true"></span>
-                <span>Active &amp; Available</span>
+                <span id="contact-status-text">Active &amp; Available</span>
               </div>
               <h2 class="thread-heading" style="font-size: 1.5rem;">Current availability</h2>
-              <p class="availability-text">
-                I am actively seeking software engineering roles, technical systems experiments, and high-craft creative front-end collaborations.
+              <p id="contact-availability-body" class="availability-text">
+                1st-year B.Tech CSE (AI/ML) student open to mentorship, internships, and front-end collaborations.
               </p>
               <p class="text-muted" style="font-size: 0.95rem;">
-                Whether you have an ambitious open-source initiative, a local AI game architecture, or want to build crisp web software together, my inbox is always open.
+                If you have an open-source initiative, an internship opportunity, or want to build clean web interfaces together, feel free to reach out.
               </p>
             </div>
 
             <div style="margin-top: 2rem;">
-              <span class="text-mono text-muted" style="font-size: 0.8125rem;">Location: Remote / Open to relocation</span>
+              <span id="contact-location-text" class="text-mono text-muted" style="font-size: 0.8125rem;">Location: India (Open to remote)</span>
             </div>
           </div>
 
@@ -607,26 +399,26 @@
             <h2 class="label-heading">Verified Channels</h2>
 
             <!-- Email: Primary Action per View rule (red fill) -->
-            <a href="mailto:sarvesh.chawan1000@gmail.com" class="contact-action-btn primary-email">
-              <span>Email: sarvesh.chawan1000@gmail.com</span>
+            <a id="contact-email-link" href="mailto:sarvesh.chawan1000@gmail.com" class="contact-action-btn primary-email">
+              <span class="link-text">Email: sarvesh.chawan1000@gmail.com</span>
               <span class="btn-arrow" aria-hidden="true">&rarr;</span>
             </a>
 
             <!-- GitHub -->
-            <a href="https://github.com/sarveshchawan1000-gif" class="contact-action-btn" target="_blank" rel="noopener noreferrer">
+            <a id="contact-github-link" href="https://github.com/sarveshchawan1000-gif" class="contact-action-btn" target="_blank" rel="noopener noreferrer">
               <span>GitHub: @sarveshchawan1000-gif</span>
               <span class="btn-arrow" aria-hidden="true">&#x2197;</span>
             </a>
 
             <!-- LinkedIn -->
-            <a href="https://www.linkedin.com/in/sarvesh-chavan-a57080414/" class="contact-action-btn" target="_blank" rel="noopener noreferrer">
+            <a id="contact-linkedin-link" href="https://www.linkedin.com/in/sarvesh-chavan-a57080414/" class="contact-action-btn" target="_blank" rel="noopener noreferrer">
               <span>LinkedIn: in/sarvesh-chavan</span>
               <span class="btn-arrow" aria-hidden="true">&#x2197;</span>
             </a>
 
-            <!-- Resume PDF -->
-            <a href="[file]" class="contact-action-btn" target="_blank" rel="noopener noreferrer">
-              <span>Resume PDF: [file]</span>
+            <!-- Resume PDF (Hidden until real file supplied; no dead [file] link) -->
+            <a id="contact-resume-link" href="#" class="contact-action-btn" target="_blank" rel="noopener noreferrer" style="display: none;">
+              <span>Resume PDF</span>
               <span class="btn-arrow" aria-hidden="true">&#x2193;</span>
             </a>
           </div>
@@ -645,16 +437,125 @@
     <!-- Site Footer -->
     <footer class="site-footer">
       <div class="footer-inner">
-        <div class="footer-meta">
+        <div id="site-footer-meta" class="footer-meta">
           <span>&copy; 2026 Sarvesh Chavan</span>
           <span class="footer-bullet" aria-hidden="true">&bull;</span>
-          <span>Zero-runtime static portfolio</span>
+          <span>1st-year B.Tech CSE (AI/ML)</span>
+          <span class="footer-bullet" aria-hidden="true">&bull;</span>
+          <span>Front-end Developer</span>
         </div>
-        <div class="text-mono" style="font-size: 0.75rem;">
-          60fps Canvas Backgrounds &bull; Vanilla JS &bull; High-DPI
+        <div class="footer-links">
+          <a href="https://github.com/sarveshchawan1000-gif" target="_blank" rel="noopener" class="footer-link">GitHub</a>
+          <span class="footer-bullet" aria-hidden="true">&bull;</span>
+          <a href="https://www.linkedin.com/in/sarvesh-chavan-a57080414/" target="_blank" rel="noopener" class="footer-link">LinkedIn</a>
+          <span class="footer-bullet" aria-hidden="true">&bull;</span>
+          <a href="mailto:sarvesh.chawan1000@gmail.com" class="footer-link">Email</a>
         </div>
       </div>
     </footer>
+  </div>
+
+  <!-- ================= ON-PAGE CONTENT EDITOR MODAL ================= -->
+  <div id="content-editor-modal" class="editor-modal" role="dialog" aria-modal="true" aria-labelledby="editor-title" hidden>
+    <div class="editor-dialog panel">
+      <div class="editor-header">
+        <div class="editor-header-left">
+          <span class="status-dot"></span>
+          <h2 id="editor-title" class="thread-heading" style="margin: 0; font-size: 1.25rem;">Portfolio Content Editor</h2>
+        </div>
+        <button id="editor-close-btn" class="btn btn-subtle" type="button" aria-label="Close Editor">&times; Close</button>
+      </div>
+
+      <div class="editor-notice">
+        <strong>Notice:</strong> Changes are saved only in this browser. To publish for everyone, download <code>content.json</code>, replace <code>/data/content.json</code> in the project, and redeploy.
+      </div>
+
+      <div class="editor-body">
+        <!-- Section 1: Home & About -->
+        <fieldset class="editor-fieldset">
+          <legend class="label-heading">Home &amp; About Text</legend>
+          <div class="editor-field">
+            <label for="edit-home-tagline">Home Sub-sentence (Tagline):</label>
+            <input type="text" id="edit-home-tagline" class="editor-input">
+          </div>
+          <div class="editor-field">
+            <label for="edit-about-lead">About Lead Paragraph:</label>
+            <textarea id="edit-about-lead" class="editor-textarea" rows="2"></textarea>
+          </div>
+          <div class="editor-field">
+            <label for="edit-about-body">About Body Paragraph:</label>
+            <textarea id="edit-about-body" class="editor-textarea" rows="4"></textarea>
+          </div>
+        </fieldset>
+
+        <!-- Section 2: Manage Projects -->
+        <fieldset class="editor-fieldset">
+          <legend class="label-heading">Projects</legend>
+          <div id="editor-projects-list" class="editor-projects-list">
+            <!-- Populated dynamically -->
+          </div>
+
+          <div class="editor-add-proj-box">
+            <h3 class="label-heading" style="margin-bottom: 0.75rem;">Add / Edit Project</h3>
+            <input type="hidden" id="edit-proj-index" value="">
+            <div class="editor-grid-2">
+              <div class="editor-field">
+                <label for="edit-proj-title">Project Title *:</label>
+                <input type="text" id="edit-proj-title" class="editor-input" placeholder="e.g. AMENDMENT">
+              </div>
+              <div class="editor-field">
+                <label for="edit-proj-status">Status Pill:</label>
+                <input type="text" id="edit-proj-status" class="editor-input" placeholder="e.g. Hacktoberfest Winner or In Progress">
+              </div>
+            </div>
+            <div class="editor-field">
+              <label for="edit-proj-summary">Summary:</label>
+              <input type="text" id="edit-proj-summary" class="editor-input" placeholder="Short 1-2 sentence overview">
+            </div>
+            <div class="editor-grid-2">
+              <div class="editor-field">
+                <label for="edit-proj-problem">Problem:</label>
+                <textarea id="edit-proj-problem" class="editor-textarea" rows="2" placeholder="What challenge does this solve?"></textarea>
+              </div>
+              <div class="editor-field">
+                <label for="edit-proj-what">What I Did:</label>
+                <textarea id="edit-proj-what" class="editor-textarea" rows="2" placeholder="Your specific contributions"></textarea>
+              </div>
+            </div>
+            <div class="editor-grid-2">
+              <div class="editor-field">
+                <label for="edit-proj-stack">Stack (comma-separated):</label>
+                <input type="text" id="edit-proj-stack" class="editor-input" placeholder="HTML5, CSS3, JavaScript">
+              </div>
+              <div class="editor-field">
+                <label for="edit-proj-link">Link or Status:</label>
+                <input type="text" id="edit-proj-link" class="editor-input" placeholder="URL or 'In Progress'">
+              </div>
+            </div>
+            <input type="hidden" id="edit-proj-id" value="">
+            <button type="button" id="editor-add-project-btn" class="btn btn-primary" style="margin-top: 0.5rem;">Add Project</button>
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="editor-footer">
+        <div class="editor-footer-left">
+          <button type="button" id="editor-export-btn" class="btn btn-subtle" title="Download content.json to commit to git">
+            &#x2193; Download content.json
+          </button>
+          <button type="button" id="editor-import-btn" class="btn btn-subtle" title="Load a content.json file">
+            &#x2191; Load content.json
+          </button>
+          <input type="file" id="editor-import-file" accept=".json" style="display: none;">
+          <button type="button" id="editor-reset-btn" class="btn btn-subtle" title="Discard browser edits and restore published defaults">
+            &#x21BA; Reset to Published
+          </button>
+        </div>
+        <div class="editor-footer-right">
+          <button type="button" id="editor-save-btn" class="btn btn-primary">Save Changes</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Background Scripts -->
@@ -664,6 +565,9 @@
 
   <!-- Router Script -->
   <script src="./js/router.js"></script>
+
+  <!-- Content Engine & On-Page Editor -->
+  <script src="./js/content.js"></script>
 
   <!-- Main Engine Script -->
   <script src="./js/main.js"></script>

@@ -1,0 +1,132 @@
+{
+  "personal": {
+    "name": "Sarvesh Chavan",
+    "study": "B.Tech CSE (AI/ML) - 1st Year",
+    "tagline": "1st-year B.Tech CSE (AI/ML) student focusing on front-end development, building responsive, accessible web interfaces.",
+    "roles": [
+      "1st-year B.Tech CSE (AI/ML) student",
+      "Front-end developer",
+      "Web interface builder"
+    ],
+    "location": "India",
+    "availabilityStatus": "Active & Available",
+    "availabilityText": "1st-year B.Tech CSE (AI/ML) student open to mentorship, internships, and front-end collaborations."
+  },
+  "about": {
+    "heading": "About Sarvesh Chavan",
+    "lead": "I am Sarvesh Chavan, a 1st-year B.Tech CSE (AI/ML) student with a strong focus on front-end development.",
+    "body": "I enjoy crafting clean, responsive, and accessible web interfaces from first principles. I focus on semantic HTML, modern CSS, and vanilla JavaScript without unnecessary complexity. Outside of coding, I enjoy playing ground sports, building in Minecraft, and watching anime.",
+    "interests": [
+      "Frontend development",
+      "Ground sports",
+      "Minecraft",
+      "Anime"
+    ],
+    "principles": [
+      {
+        "title": "1. Structure & Accessibility First",
+        "description": "Prioritize semantic HTML landmarks, clear readable typography, and complete keyboard navigability."
+      },
+      {
+        "title": "2. Build Small & Test Often",
+        "description": "Construct modular, tested components and responsive layouts that adapt smoothly across all screen sizes."
+      },
+      {
+        "title": "3. Keep It Honest",
+        "description": "Show ground-truth code and real implementations rather than superficial percentage bars or inflated claims."
+      }
+    ]
+  },
+  "projects": [
+    {
+      "id": "amendment",
+      "title": "AMENDMENT",
+      "status": "Hacktoberfest Winner",
+      "summary": "An interactive board game interface where players propose and vote on dynamic rule changes mid-match.",
+      "problem": "Displaying constantly evolving game rules and active match states clearly to players without confusing layout shifts or visual clutter.",
+      "whatIDid": "Designed and implemented the complete front-end user interface, responsive component layouts, and typography. Won the Hacktoberfest event organized at NST.",
+      "stack": ["HTML5", "CSS3", "JavaScript"],
+      "link": "https://github.com/sarveshchawan1000-gif"
+    },
+    {
+      "id": "zip-up-nation",
+      "title": "Zip Up Nation",
+      "status": "In Progress",
+      "summary": "E-commerce & community web platform currently in active development.",
+      "problem": "TODO: Define the primary problem and user experience challenge being solved by Zip Up Nation.",
+      "whatIDid": "Designing the front-end user experience, typography, and responsive interface components.",
+      "stack": ["HTML5", "CSS3", "JavaScript"],
+      "link": "In Progress"
+    }
+  ],
+  "skills": [
+    {
+      "category": "Languages",
+      "items": [
+        { "name": "HTML5", "context": "Semantic structure, WCAG accessibility, landmarks" },
+        { "name": "CSS3", "context": "Flexbox, Grid, custom properties, responsive math" },
+        { "name": "JavaScript", "context": "Vanilla ES6+, DOM APIs, clean client-side logic" },
+        { "name": "TODO: Add Language", "context": "TODO: Specify other programming languages studied in 1st year (e.g. C, Python)" }
+      ]
+    },
+    {
+      "category": "Frontend & Design",
+      "items": [
+        { "name": "Responsive Layout", "context": "Mobile-first, fluid scales, media queries" },
+        { "name": "Canvas 2D", "context": "Interactive canvas graphics & animation loops" },
+        { "name": "Accessibility", "context": "Screen-reader flow, keyboard navigation, contrast" },
+        { "name": "UI Engineering", "context": "3D card tilt, clean typography, state management" }
+      ]
+    },
+    {
+      "category": "Tools & Workflow",
+      "items": [
+        { "name": "Git & GitHub", "context": "Version control, commits, open-source workflow" },
+        { "name": "VS Code", "context": "Development environment, linting, debugging" },
+        { "name": "Browser DevTools", "context": "DOM inspection, performance profiling, responsive preview" },
+        { "name": "TODO: Tooling", "context": "TODO: Add other developer tools you use" }
+      ]
+    },
+    {
+      "category": "Learning Next",
+      "badge": "Frontier",
+      "items": [
+        { "name": "React / Modern UI", "context": "Component architectures and stateful frontends" },
+        { "name": "TypeScript", "context": "Type-safe front-end web engineering" },
+        { "name": "TODO: Next Goal", "context": "TODO: Add your target technology for 2nd semester" }
+      ]
+    }
+  ],
+  "journey": [
+    {
+      "date": "2024",
+      "title": "Started B.Tech CSE (AI/ML) — 1st Year",
+      "body": "Commenced undergraduate studies in Computer Science & Engineering (AI/ML). Focused on computing foundations, discrete problem solving, and modern web interfaces."
+    },
+    {
+      "date": "2024",
+      "title": "AMENDMENT — Hacktoberfest Winner (NST)",
+      "body": "Collaborated on AMENDMENT as the lead front-end designer. Designed the full web user interface, which won the Hacktoberfest event organized at NST."
+    },
+    {
+      "date": "2025",
+      "title": "Zip Up Nation (In Progress)",
+      "body": "Currently designing the front-end user experience and developing responsive interface components for Zip Up Nation."
+    },
+    {
+      "date": "TODO: Year",
+      "title": "TODO: Next Milestone",
+      "body": "TODO: Supply upcoming hackathon, semester milestone, or internship."
+    }
+  ],
+  "contact": {
+    "email": "sarvesh.chawan1000@gmail.com",
+    "github": "https://github.com/sarveshchawan1000-gif",
+    "linkedin": "https://www.linkedin.com/in/sarvesh-chavan-a57080414/",
+    "location": "Remote / Open to relocation",
+    "availabilityStatus": "Active & Available",
+    "availabilityText": "1st-year B.Tech CSE (AI/ML) student open to mentorship, internships, and front-end collaborations.",
+    "resume": null
+  }
+}
+
