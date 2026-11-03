@@ -756,24 +756,19 @@
       ],
       journey: [
         {
-          date: "2024",
+          date: "2026",
           title: "Started B.Tech CSE (AI/ML) — 1st Year",
           body: "Commenced undergraduate studies in Computer Science & Engineering (AI/ML). Focused on computing foundations, discrete problem solving, and modern web interfaces."
         },
         {
-          date: "2024",
+          date: "2026",
           title: "AMENDMENT — Hacktoberfest Winner (NST)",
           body: "Collaborated on AMENDMENT as the lead front-end designer. Designed the full web user interface, which won the Hacktoberfest event organized at NST."
         },
         {
-          date: "2025",
+          date: "2026",
           title: "Zip Up Nation (In Progress)",
           body: "Currently designing the front-end user experience and developing responsive interface components for Zip Up Nation."
-        },
-        {
-          date: "TODO: Year",
-          title: "TODO: Next Milestone",
-          body: "TODO: Supply upcoming hackathon, semester milestone, or internship."
         }
       ],
       contact: {

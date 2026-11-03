@@ -2,18 +2,24 @@
  * scrollSpider.js — Unified Scroll-Driven Spider
  *
  * Requirements:
- * 1. Thread is NEVER pinned to an arbitrary single static point (no diagonal slashes across text).
- *    The thread drops straight down from the ceiling directly above the spider (x1 = currentX).
- * 2. On Home: Spider hangs on its silk thread in the hero area, swaying gently.
- * 3. Scrolling Home -> About: Spider descends down to the orb-web in the About section.
- * 4. Landing on About web: THE STRING CUTS! Thread completely disappears.
- *    The spider perches freely on the web with no string attached.
- * 5. Projects / Skills: Spider fades during circuit board sections.
- * 6. Journey -> Contact: At Journey, as user scrolls towards Contact,
- *    THE STRING ATTACHES AGAIN from the ceiling, and the spider descends
- *    down on its thread into the Contact section (Night City).
- * 7. Scrolling back up reverses the process seamlessly (spider climbs string,
- *    string cuts on the web, reattaches when climbing back to Home).
+ * 1. Thread drops straight down from ceiling directly above spider (x1 = currentX, y1 = hdr).
+ *    Never attached to a single static point; follows spider naturally.
+ * 2. On the string (Home & Contact):
+ *    - Follows cursor horizontally (mouseX) and vertically (mouseY reels string in/out).
+ *    - Reaching / climbing leg animation when moving up, relaxing when lowering.
+ * 3. Scrolling Home -> About:
+ *    - Descends from Home position toward the WebSplit orb-web at screen center.
+ * 4. Landed on the Web (About & Journey):
+ *    - STRING CUTS! Thread completely disappears (threadEl.style.display = 'none').
+ *    - Spider actively crawls and follows cursor point across the web (within web radius).
+ *    - Turns to face the cursor direction while walking.
+ *    - 8 jointed legs actively step and walk along web strands.
+ * 5. Projects & Skills (Circuit):
+ *    - Spider fades out cleanly over circuit board.
+ * 6. Journey -> Contact:
+ *    - STRING ATTACHES AGAIN from ceiling, and spider descends on its thread into Contact.
+ *    - Follows cursor on string again.
+ * 7. Scrolling back up reverses seamlessly.
  */
 (function () {
   'use strict';
@@ -48,17 +54,16 @@
   });
 
   // ── State ────────────────────────────────────────────────────────────────
-  let currentX    = window.innerWidth * 0.5;
-  let currentY    = 130;
-  let spiderAngle = 0;
-  let targetAngle = 0;
-  let legPhase    = 0;
+  let currentX      = window.innerWidth * 0.5;
+  let currentY      = 140;
+  let spiderAngle   = 0;
+  let targetAngle   = 0;
+  let legPhase      = 0;
   let spiderOpacity = 1;
 
   let lastScrollY  = window.scrollY || 0;
   let isClimbingUp = false;
 
-  // Signal to background scenes (nightcity, webSplit) that unified overlay is active
   window.scrollSpiderActive = true;
   rig.classList.add('is-visible');
 
@@ -79,7 +84,7 @@
     const vw  = window.innerWidth;
     const vh  = window.innerHeight;
 
-    // Web landing coordinates (center of screen, where WebSplit orb-web sits)
+    // Center of the screen where WebSplit orb-web sits
     const webX = vw * 0.5;
     const webY = vh * 0.5;
 
@@ -99,141 +104,203 @@
     let threadVisible = false;
     let targetOpacity = 1;
     let isLandedOnWeb  = false;
+    let easeRate      = 0.12;
 
-    // Mouse influence (subtle cursor drift, not hard-pinned)
-    const mouseDriftX = (mouseX - vw * 0.5) * 0.15;
-    const mouseDriftY = Math.max(-20, Math.min(50, (mouseY - 200) * 0.18));
+    // ── Cursor following calculations on string ──
+    const stringFollowX = Math.max(70, Math.min(vw - 70, mouseX));
+    const stringMinY    = hdr + 75;
+    const stringMaxY    = Math.min(vh * 0.72, vh - 100);
+    const stringFollowY = Math.max(stringMinY, Math.min(stringMaxY, mouseY));
+
+    // ── Cursor following calculations on web ──
+    const webDx = mouseX - webX;
+    const webDy = mouseY - webY;
+    const webDist = Math.hypot(webDx, webDy);
+    const maxCrawlRadius = Math.min(vw * 0.32, vh * 0.32, 150);
+    const crawlDist = Math.min(webDist * 0.65, maxCrawlRadius);
+
+    let webTargetX = webX;
+    let webTargetY = webY;
+    if (webDist > 2) {
+      webTargetX = webX + (webDx / webDist) * crawlDist;
+      webTargetY = webY + (webDy / webDist) * crawlDist;
+    }
+
+    // Active route determined by router's IntersectionObserver
+    const activeRoute = (window.portfolioRouter && window.portfolioRouter.currentRoute) || 'home';
 
     // ────────────────────────────────────────────────────────────────────────
-    // SCROLL STAGE 1: Home -> About
+    // SCROLL STAGE 1: Home (or transitioning Home -> About)
     // ────────────────────────────────────────────────────────────────────────
-    if (aboutTop > hdr + 20) {
-      // Home section is in view, descending towards About
+    if (activeRoute === 'home') {
       const progressToAbout = Math.max(0, Math.min(1, (vh - aboutTop) / (vh - (hdr + 20))));
 
-      if (progressToAbout < 0.94) {
-        // Spider is hanging from the top on its thread
-        const restX = vw * 0.5 + mouseDriftX;
-        const restY = hdr + 120 + mouseDriftY;
+      if (progressToAbout < 0.92) {
+        // ON STRING: follows cursor point horizontally & vertically
+        const restX = stringFollowX;
+        const restY = stringFollowY;
 
-        // Smoothly descend toward webX, webY as About approaches
+        // Descend smoothly toward web as About scrolls in
         const eased = progressToAbout * progressToAbout * (3 - 2 * progressToAbout);
-        targetX = restX + (webX - restX) * eased;
-        targetY = restY + (webY - restY) * eased;
+        targetX = restX + (webTargetX - restX) * eased;
+        targetY = restY + (webTargetY - restY) * eased;
 
-        // String is ATTACHED and descending
         threadVisible = true;
         isLandedOnWeb = false;
         targetOpacity = 1;
+        easeRate = 0.12;
+
+        if (targetY < currentY - 3 || isClimbingUp) {
+          targetAngle = Math.PI; // Face upward when climbing
+        } else {
+          targetAngle = (mouseX - currentX) * 0.004;
+        }
       } else {
-        // Lands on the web: STRING CUTS!
-        targetX = webX;
-        targetY = webY;
-        threadVisible = false; // CUT!
+        // Reached the web: STRING CUTS!
+        targetX = webTargetX;
+        targetY = webTargetY;
+        threadVisible = false;
         isLandedOnWeb = true;
         targetOpacity = 1;
+        easeRate = 0.08;
+
+        if (webDist > 6) {
+          targetAngle = Math.atan2(webDy, webDx) + Math.PI / 2;
+        } else {
+          targetAngle = 0;
+        }
       }
     }
     // ────────────────────────────────────────────────────────────────────────
-    // SCROLL STAGE 2: About section
+    // SCROLL STAGE 2: About section (LANDED ON WEB)
     // ────────────────────────────────────────────────────────────────────────
-    else if (projectsTop > vh * 0.5) {
-      // Comfortably inside About section
-      // Spider sits on the web, STRING IS CUT
-      targetX = webX + (mouseX - vw * 0.5) * 0.04;
-      targetY = webY + (mouseY - vh * 0.5) * 0.04;
-      threadVisible = false; // CUT!
+    else if (activeRoute === 'about') {
+      // Spider actively crawls and follows cursor point across the web
+      targetX = webTargetX;
+      targetY = webTargetY;
+      threadVisible = false; // STRING IS CUT!
       isLandedOnWeb = true;
       targetOpacity = 1;
+      easeRate = 0.08;
+
+      if (webDist > 6) {
+        targetAngle = Math.atan2(webDy, webDx) + Math.PI / 2;
+      } else {
+        targetAngle = 0;
+      }
     }
     // ────────────────────────────────────────────────────────────────────────
     // SCROLL STAGE 3: Projects & Skills (Circuit background)
     // ────────────────────────────────────────────────────────────────────────
-    else if (journeyTop > vh * 0.6) {
-      // In Projects or Skills: fade spider out cleanly so it does not float over cards
+    else if (activeRoute === 'projects' || activeRoute === 'skills') {
       targetX = webX;
       targetY = webY;
       threadVisible = false;
       isLandedOnWeb = false;
-      targetOpacity = 0;
+      targetOpacity = 0; // Fade out cleanly over circuit board
     }
     // ────────────────────────────────────────────────────────────────────────
-    // SCROLL STAGE 4: Journey (WebSplit background)
+    // SCROLL STAGE 4: Journey section (LANDED ON WEB)
     // ────────────────────────────────────────────────────────────────────────
-    else if (contactTop > vh * 0.85) {
-      // In Journey section: spider is back on the web! STRING IS STILL CUT.
-      targetX = webX + (mouseX - vw * 0.5) * 0.04;
-      targetY = webY + (mouseY - vh * 0.5) * 0.04;
-      threadVisible = false; // CUT!
-      isLandedOnWeb = true;
-      targetOpacity = 1;
+    else if (activeRoute === 'journey') {
+      // Check if Contact is scrolling in near bottom
+      if (contactTop < vh * 0.75) {
+        // Approaching Contact: STRING ATTACHES AGAIN!
+        const contactProgress = Math.max(0, Math.min(1, (vh * 0.75 - contactTop) / (vh * 0.75 - (hdr + 20))));
+        const eased = contactProgress * contactProgress * (3 - 2 * contactProgress);
+
+        targetX = webTargetX + (stringFollowX - webTargetX) * eased;
+        targetY = webTargetY + (stringFollowY - webTargetY) * eased;
+
+        threadVisible = true; // REATTACHED!
+        isLandedOnWeb = false;
+        targetOpacity = 1;
+        easeRate = 0.12;
+
+        if (targetY < currentY - 3 || isClimbingUp) {
+          targetAngle = Math.PI;
+        } else {
+          targetAngle = (mouseX - currentX) * 0.004;
+        }
+      } else {
+        // Sitting on the web in Journey: STRING IS CUT! Follows cursor on web
+        targetX = webTargetX;
+        targetY = webTargetY;
+        threadVisible = false; // CUT!
+        isLandedOnWeb = true;
+        targetOpacity = 1;
+        easeRate = 0.08;
+
+        if (webDist > 6) {
+          targetAngle = Math.atan2(webDy, webDx) + Math.PI / 2;
+        } else {
+          targetAngle = 0;
+        }
+      }
     }
     // ────────────────────────────────────────────────────────────────────────
-    // SCROLL STAGE 5: Journey -> Contact transition
-    // "again attach at journey when it will go to the contacts page"
+    // SCROLL STAGE 5: Contact section (ON STRING)
     // ────────────────────────────────────────────────────────────────────────
     else {
-      // Transitioning into Contact section (Night City)
-      // STRING ATTACHES AGAIN! Spider drops down into Contact on its thread.
-      const contactProgress = Math.max(0, Math.min(1, (vh - contactTop) / (vh - (hdr + 20))));
-      const eased = contactProgress * contactProgress * (3 - 2 * contactProgress);
-
-      const contactRestX = vw * 0.5 + mouseDriftX;
-      const contactRestY = hdr + 130 + mouseDriftY;
-
-      targetX = webX + (contactRestX - webX) * eased;
-      targetY = webY + (contactRestY - webY) * eased;
-
-      // The thread attaches again!
-      threadVisible = true;
+      // Contact section: spider hangs from string, following cursor
+      targetX = stringFollowX;
+      targetY = stringFollowY;
+      threadVisible = true; // ATTACHED!
       isLandedOnWeb = false;
       targetOpacity = 1;
+      easeRate = 0.12;
+
+      if (targetY < currentY - 3 || isClimbingUp) {
+        targetAngle = Math.PI;
+      } else {
+        targetAngle = (mouseX - currentX) * 0.004;
+      }
     }
 
     // ── Smooth coordinate interpolation ─────────────────────────────────────
     const prevX = currentX;
     const prevY = currentY;
-    const easeRate = isLandedOnWeb ? 0.18 : 0.12;
     currentX += (targetX - currentX) * easeRate;
     currentY += (targetY - currentY) * easeRate;
     spiderOpacity += (targetOpacity - spiderOpacity) * 0.1;
 
     const moveDist = Math.hypot(currentX - prevX, currentY - prevY);
 
-    // ── Orientation Angle ───────────────────────────────────────────────────
-    if (isLandedOnWeb) {
-      targetAngle = 0;
-    } else if (isClimbingUp && threadVisible) {
-      // Facing up toward ceiling thread when climbing
-      targetAngle = Math.PI;
-    } else {
-      // Facing down when hanging or descending
-      targetAngle = 0;
-    }
-
+    // ── Smooth angle interpolation ──────────────────────────────────────────
     let diff = targetAngle - spiderAngle;
     while (diff < -Math.PI) diff += Math.PI * 2;
     while (diff >  Math.PI) diff -= Math.PI * 2;
-    spiderAngle += diff * 0.15;
+    spiderAngle += diff * (isLandedOnWeb ? 0.12 : 0.16);
 
-    // ── Leg stepping animation ──────────────────────────────────────────────
+    // ── Leg stepping animation (Walking / Crawling) ─────────────────────────
     if (isLandedOnWeb) {
-      legPhase += 0.02; // Subtle idle breathing on web
-    } else if (moveDist > 0.2 || Math.abs(scrollDelta) > 0.5) {
-      legPhase += Math.max(moveDist * 0.25, 0.2); // Striding along string
-    } else {
-      legPhase += 0.02;
+      if (moveDist > 0.12) {
+        // Active crawling along web strands towards cursor
+        legPhase += moveDist * 0.38;
+      } else {
+        // Subtle idle breathing & twitching on strands
+        legPhase += 0.02;
+      }
+    } else if (threadVisible) {
+      if (moveDist > 0.15 || Math.abs(scrollDelta) > 0.5) {
+        // Climbing or reeling leg motion
+        legPhase += Math.max(moveDist * 0.28, 0.2);
+      } else {
+        legPhase += 0.02;
+      }
     }
 
-    // ── Apply Opacity to Canvas ─────────────────────────────────────────────
+    // ── Apply Canvas Opacity & Position ─────────────────────────────────────
     spiderCvs.style.opacity = spiderOpacity < 0.02 ? '0' : spiderOpacity.toFixed(2);
+    spiderCvs.style.left    = (currentX - W / 2) + 'px';
+    spiderCvs.style.top     = (currentY - H / 2) + 'px';
 
     // ── Render Thread & Spider ──────────────────────────────────────────────
     updateThread(hdr, threadVisible);
-    drawSpider(isLandedOnWeb);
+    drawSpider(isLandedOnWeb, moveDist);
   }
 
-  // ── Update Thread (Directly Vertical, Never Hard-Pinned to Single Point) ──
+  // ── Update Thread (Vertical directly above spider) ───────────────────────
   function updateThread(hdr, visible) {
     if (!visible || spiderOpacity < 0.05) {
       threadEl.style.display = 'none';
@@ -244,8 +311,7 @@
     threadEl.style.display = 'block';
     beadEl.style.display   = 'block';
 
-    // The thread drops vertically from the ceiling directly above the spider:
-    // x1 = currentX, so the line is ALWAYS vertical and NEVER angles diagonally across text!
+    // The thread drops vertically from ceiling directly above spider
     const ax = currentX;
     const ay = hdr;
 
@@ -256,13 +322,10 @@
 
     beadEl.setAttribute('cx', ax);
     beadEl.setAttribute('cy', ay + 1);
-
-    spiderCvs.style.left = (currentX - W / 2) + 'px';
-    spiderCvs.style.top  = (currentY - H / 2) + 'px';
   }
 
-  // ── Draw Spider Body & Jointed Legs ──────────────────────────────────────
-  function drawSpider(isLanded) {
+  // ── Draw Spider Body & Jointed Walking Legs ──────────────────────────────
+  function drawSpider(isLanded, moveDist) {
     ctx.clearRect(0, 0, W, H);
     if (spiderOpacity < 0.02) return;
 
@@ -271,37 +334,46 @@
     ctx.translate(cx, cy);
     ctx.rotate(spiderAngle);
 
-    // Shadow
-    ctx.fillStyle = 'rgba(9, 11, 22, 0.4)';
+    // Dynamic drop shadow
+    ctx.fillStyle = 'rgba(9, 11, 22, 0.42)';
     ctx.beginPath();
     ctx.ellipse(1, 4, 7, 10, 0, 0, Math.PI * 2);
     ctx.fill();
 
     // 8 Delicate Jointed Spider Legs
     ctx.strokeStyle = '#E23636';
-    ctx.lineWidth   = 1.3;
+    ctx.lineWidth   = 1.35;
     ctx.lineCap     = 'round';
     ctx.lineJoin    = 'round';
 
     const legs = [
-      { sy: -4, kx: -8,  ky: -11, fx: -13, fy: -9  },
-      { sy: -2, kx: -11, ky: -6,  fx: -16, fy: -4  },
-      { sy:  1, kx: -11, ky:  4,  fx: -15, fy:  10 },
-      { sy:  3, kx:  -8, ky:  9,  fx: -12, fy:  16 }
+      { sy: -4, kx: -8,  ky: -11, fx: -14, fy: -9  },
+      { sy: -2, kx: -11, ky: -6,  fx: -17, fy: -4  },
+      { sy:  1, kx: -11, ky:  4,  fx: -16, fy:  10 },
+      { sy:  3, kx:  -8, ky:  9,  fx: -13, fy:  16 }
     ];
+
+    const isMoving = moveDist > 0.12;
 
     legs.forEach((leg, i) => {
       let s = 0;
       if (!reducedMotion) {
         if (isLanded) {
-          // Spread legs gripping web strands with gentle pulse
-          s = Math.sin(legPhase + i * 1.2) * 0.9;
+          if (isMoving) {
+            // Contralateral stepping gait across web strands
+            const gaitPhase = legPhase + (i % 2 === 0 ? 0 : Math.PI) + (i > 1 ? 0.6 : 0);
+            s = Math.sin(gaitPhase) * 2.8;
+          } else {
+            // Gripping web strands with subtle idle breathing
+            s = Math.sin(legPhase + i * 1.2) * 0.8;
+          }
         } else if (isClimbingUp) {
           // Climbing strides reaching upward
-          s = Math.sin(legPhase + (i % 2 === 0 ? 0 : Math.PI)) * 3.2;
+          const climbPhase = legPhase + (i % 2 === 0 ? 0 : Math.PI);
+          s = Math.sin(climbPhase) * 3.4;
         } else {
-          // Hanging / descending gentle flex
-          s = Math.sin(legPhase + i * (Math.PI / 2)) * 1.6;
+          // Hanging / descending flex
+          s = Math.sin(legPhase + i * (Math.PI / 2)) * 1.8;
         }
       }
 
@@ -309,14 +381,14 @@
       ctx.beginPath();
       ctx.moveTo(-2.5, leg.sy);
       ctx.lineTo(leg.kx + s * 0.4, leg.ky + s);
-      ctx.lineTo(leg.fx + s, leg.fy + s * 1.2);
+      ctx.lineTo(leg.fx + s, leg.fy + s * 1.15);
       ctx.stroke();
 
       // Right leg (mirror)
       ctx.beginPath();
       ctx.moveTo(2.5, leg.sy);
       ctx.lineTo(-leg.kx - s * 0.4, leg.ky + s);
-      ctx.lineTo(-leg.fx - s, leg.fy + s * 1.2);
+      ctx.lineTo(-leg.fx - s, leg.fy + s * 1.15);
       ctx.stroke();
     });
 
