@@ -336,49 +336,6 @@ main#content {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* --- View Bottom Wrap-Around Nav --- */
-.view-pagination {
-  margin-top: 3.5rem;
-  padding: 1rem 1.25rem;
-  border-top: 1px solid var(--border-line-subtle);
-  background-color: rgba(9, 11, 22, 0.88);
-  border: 1px solid var(--border-line-subtle);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-family: var(--font-mono);
-  font-size: 0.875rem;
-}
-
-.pagination-link {
-  color: var(--color-ink);
-  background-color: rgba(9, 11, 22, 0.95);
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.9rem;
-  border: 1px solid var(--border-line);
-  transition: all 0.15s ease;
-}
-
-.pagination-link:hover {
-  color: var(--color-ink);
-  border-color: var(--border-line);
-}
-
-.keyboard-hint {
-  font-size: 0.75rem;
-  color: var(--color-muted);
-  display: none;
-}
-
-@media (min-width: 768px) {
-  .keyboard-hint {
-    display: block;
-  }
-}
-
 /* --- Buttons --- */
 .btn {
   display: inline-flex;
@@ -1296,16 +1253,6 @@ main#content {
 
   .panel {
     padding: 1.25rem;
-  }
-
-  .view-pagination {
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .view-pagination .pagination-link {
-    width: 100%;
-    justify-content: center;
   }
 
   .project-header {

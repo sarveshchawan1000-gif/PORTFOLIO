@@ -50,7 +50,7 @@
 
     init() {
       // Wire nav links to smooth-scroll
-      document.querySelectorAll('a.nav-link[href^="#"], a.pagination-link[href^="#"]').forEach(link => {
+      document.querySelectorAll('a.nav-link[href^="#"]').forEach(link => {
         link.addEventListener('click', e => {
           const href = link.getAttribute('href');
           const route = href.replace(/^#\/?/, '').trim().toLowerCase();
