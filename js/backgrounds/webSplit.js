@@ -572,6 +572,7 @@ class WebSplitBackground {
   // ─── spider on web ────────────────────────────────────────────────────────
 
   _drawSpider(ctx, reducedMotion) {
+    if (window.scrollSpiderActive) return;
     ctx.save();
     ctx.translate(this.spiderX, this.spiderY);
 
