@@ -15,7 +15,7 @@
 (function() {
   'use strict';
 
-  const STORAGE_KEY = 'portfolio_content';
+  const STORAGE_KEY = 'portfolio_content_v2026';
   let defaultContent = null;
   let activeContent = null;
 
@@ -41,6 +41,11 @@
       defaultContent = getBundledFallback();
     }
 
+    // Clean up any legacy unversioned storage
+    try {
+      localStorage.removeItem('portfolio_content');
+    } catch (e) {}
+
     // Check localStorage for saved edits
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
@@ -52,6 +57,18 @@
       }
     } else {
       activeContent = JSON.parse(JSON.stringify(defaultContent));
+    }
+
+    // Force migration: replace any 2024 or 2025 with 2026, remove TODO entries
+    if (activeContent && Array.isArray(activeContent.journey)) {
+      activeContent.journey.forEach(entry => {
+        if (entry.date === '2024' || entry.date === '2025') {
+          entry.date = '2026';
+        }
+      });
+      activeContent.journey = activeContent.journey.filter(entry =>
+        !(String(entry.date).includes('TODO') || String(entry.title).includes('TODO:'))
+      );
     }
 
     window.portfolioContent = activeContent;
@@ -273,11 +290,17 @@
     let html = '';
 
     activeContent.journey.forEach(entry => {
-      const isTodo = (entry.title || '').startsWith('TODO:');
+      let dateText = entry.date || '';
+      if (dateText === '2024' || dateText === '2025') {
+        dateText = '2026';
+      }
+      if (String(dateText).includes('TODO')) return;
+      if (String(entry.title || '').includes('TODO:')) return;
+
       html += `
-        <article class="timeline-entry ${isTodo ? 'timeline-entry-todo' : ''}">
+        <article class="timeline-entry">
           <div class="timeline-bead" aria-hidden="true"></div>
-          <div class="timeline-date">${escapeHTML(entry.date)}</div>
+          <div class="timeline-date">${escapeHTML(dateText)}</div>
           <h2 class="timeline-title thread-heading">${escapeHTML(entry.title)}</h2>
           <p class="timeline-body">${escapeHTML(entry.body)}</p>
         </article>
