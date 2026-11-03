@@ -295,21 +295,6 @@ p {
   background-color: rgba(243, 241, 234, 0.06);
 }
 
-.nav-edit-btn {
-  border: 1px dashed var(--color-blue);
-  color: var(--color-blue);
-  margin-left: 0.35rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-}
-
-.nav-edit-btn:hover {
-  background-color: rgba(91, 130, 255, 0.12);
-  color: var(--color-ink);
-  border-color: var(--color-blue);
-}
-
 /* --- Main Content Stage (Scrollable Layout) --- */
 main#content {
   max-width: var(--max-width);
