@@ -1,11 +1,12 @@
 /**
- * scrollSpider.js — Scroll-Driven Spider (Scrollable Layout Version)
+ * scrollSpider.js — Scroll-Driven Spider (Scrollable Layout)
  *
- * - Spider hangs from top-center of the viewport via a silk thread
- * - As user scrolls down, thread extends and spider descends toward
- *   the photo-web-landing element
- * - When it lands it perches; scrolling back up reels it back up
- * - Always active (site is now fully scrollable, single page)
+ * Behaviour:
+ * 1. Hangs from top-center of viewport on a silk thread (idle pendulum sway)
+ * 2. When the About section scrolls into view → spider descends to the
+ *    centre of the webSplit orb-web (which is always drawn at viewport centre)
+ * 3. Lands on the web, perches with spread legs
+ * 4. When user scrolls back up → spider climbs back up the silk thread
  */
 (function () {
   'use strict';
@@ -26,65 +27,83 @@
   spiderCvs.style.height = H + 'px';
   ctx.scale(dpr, dpr);
 
-  // --- Config ---
-  const GRAVITY  = 0.0035;
-  const DAMPING  = 0.982;
+  // ── Config ───────────────────────────────────────────────────────────────
+  const GRAVITY = 0.0035;
+  const DAMPING = 0.982;
 
-  // --- Motion preference ---
+  // ── Motion preference ────────────────────────────────────────────────────
   let reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', e => {
-    reducedMotion = e.matches;
-  });
+  window.matchMedia('(prefers-reduced-motion: reduce)')
+    .addEventListener('change', e => { reducedMotion = e.matches; });
 
-  // --- State ---
-  let mouseX = window.innerWidth * 0.5;
+  // ── State ────────────────────────────────────────────────────────────────
+  let mouseX = window.innerWidth  * 0.5;
   let mouseY = window.innerHeight * 0.3;
 
-  // Pendulum (for idle sway at rest position)
+  // Pendulum (idle sway)
   let anchorX     = window.innerWidth * 0.5;
   let prevAnchorX = window.innerWidth * 0.5;
   let theta = 0, omega = 0;
 
-  // Spider world position (viewport coords — always fixed)
-  let currentX = window.innerWidth * 0.5;
+  // Current spider position (viewport coords)
+  let currentX = window.innerWidth  * 0.5;
   let currentY = 100;
-  let spiderAngle = 0;
-  let targetAngle = 0;
-  let legPhase = 0;
 
+  let spiderAngle = 0, targetAngle = 0;
+  let legPhase = 0;
   let lastScrollY   = 0;
   let isClimbingUp  = false;
   let isLandedOnWeb = false;
-  let rafId = null;
 
-  // Header height
-  const HEADER_H = () => (document.querySelector('.site-header')?.offsetHeight || 60);
-
-  // Mouse tracking
-  window.addEventListener('mousemove', e => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-  });
-
-  // Always show rig (site is now scrollable, spider is always active)
+  // Always-active — suppress canvas spider in nightcity.js
   rig.classList.add('is-visible');
   window.scrollSpiderActive = true;
 
-  // --- Main Loop ---
-  function loop() {
-    rafId = requestAnimationFrame(loop);
+  window.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
 
-    const scrollY = window.scrollY || window.pageYOffset || 0;
+  // ── Helpers ──────────────────────────────────────────────────────────────
+  const headerH = () => document.querySelector('.site-header')?.offsetHeight || 60;
+
+  /**
+   * Compute scroll progress 0→1 for descending onto the About web.
+   *
+   * The webSplit orb-web lives at viewport center (fixed canvas).
+   * We want progress=1 when the About section is scrolled so that its
+   * top edge is ~40% down the viewport (the section is well in view).
+   */
+  function getScrollProgress() {
+    const aboutSection = document.getElementById('view-about');
+    if (!aboutSection) return 0;
+
+    const rect = aboutSection.getBoundingClientRect();
+    const hdr  = headerH();
+
+    // rect.top is the distance from viewport top to section top.
+    // Progress starts at 0 when section top is at viewport bottom,
+    // and reaches 1 when section top is at headerH + ~40 px
+    // (i.e. about section is comfortably in view).
+    const start = window.innerHeight;       // section top enters viewport
+    const end   = hdr + 40;                 // section top near header
+
+    const raw = 1 - Math.max(0, Math.min(1, (rect.top - end) / (start - end)));
+    return raw;
+  }
+
+  // ── Main Loop ────────────────────────────────────────────────────────────
+  function loop() {
+    requestAnimationFrame(loop);
+
+    const scrollY     = window.scrollY || 0;
     const scrollDelta = scrollY - lastScrollY;
     if (Math.abs(scrollDelta) > 0.8) isClimbingUp = scrollDelta < 0;
     lastScrollY = scrollY;
 
-    const headerH = HEADER_H();
+    const hdr = headerH();
 
-    // --- Idle pendulum anchor sway ---
-    const baseLength = Math.min(Math.max(window.innerHeight * 0.22, 120), 180);
-    const cursorYOffset = Math.min(Math.max((mouseY - 200) * 0.18, -40), 60);
-    const effectiveLength = baseLength + cursorYOffset;
+    // ── Idle pendulum physics ──────────────────────────────────────────────
+    const baseLen = Math.min(Math.max(window.innerHeight * 0.20, 100), 170);
+    const yOffset = Math.min(Math.max((mouseY - 200) * 0.18, -40), 60);
+    const effLen  = baseLen + yOffset;
 
     if (reducedMotion) {
       anchorX = window.innerWidth * 0.5;
@@ -92,59 +111,41 @@
     } else {
       const prev = anchorX;
       anchorX += (mouseX - anchorX) * 0.08;
-      const anchorAccel = (anchorX - prev) - (prev - prevAnchorX);
+      const accel = (anchorX - prev) - (prev - prevAnchorX);
       prevAnchorX = prev;
-
-      omega -= (anchorAccel / Math.max(effectiveLength, 40)) * Math.cos(theta) * 0.45;
+      omega -= (accel / Math.max(effLen, 40)) * Math.cos(theta) * 0.45;
       omega -= GRAVITY * Math.sin(theta);
       omega *= DAMPING;
       theta += omega;
-      if (theta > 1.1) { theta = 1.1; omega *= -0.5; }
+      if (theta >  1.1) { theta =  1.1; omega *= -0.5; }
       if (theta < -1.1) { theta = -1.1; omega *= -0.5; }
     }
 
-    // Resting position (hanging from anchor, swaying)
-    const restX = anchorX + Math.sin(theta) * effectiveLength;
-    const restY = headerH + Math.cos(theta) * effectiveLength;
+    // Rest position (hanging from anchor)
+    const restX = anchorX + Math.sin(theta) * effLen;
+    const restY = hdr     + Math.cos(theta) * effLen;
 
-    // --- Web landing target ---
-    const landingEl = document.getElementById('photo-web-landing');
-    let targetX = restX;
-    let targetY = restY;
-    let scrollProgress = 0;
+    // ── Descent target: About section's web (always viewport centre) ───────
+    const scrollProgress = getScrollProgress();
+    const eased = scrollProgress * scrollProgress * (3 - 2 * scrollProgress);
 
-    if (landingEl) {
-      const rect = landingEl.getBoundingClientRect();
-      // Center of the web hub element in viewport coords
-      const webX = rect.left + rect.width / 2;
-      const webY = rect.top + rect.height / 2;
+    // webSplit web centre is exactly viewport centre (fixed canvas)
+    const webX = window.innerWidth  * 0.5;
+    const webY = window.innerHeight * 0.5;
 
-      // Visible when webY is above 70% of the viewport height
-      const visibleThreshold = window.innerHeight * 0.70;
-      // Progress: 0 = web not yet visible, 1 = web at 30% of viewport
-      const rawProgress = 1 - Math.min(1, Math.max(0,
-        (webY - window.innerHeight * 0.30) / (visibleThreshold - window.innerHeight * 0.30)
-      ));
-      scrollProgress = rawProgress;
-
-      // Smoothstep easing
-      const eased = scrollProgress * scrollProgress * (3 - 2 * scrollProgress);
-
-      targetX = restX + (webX - restX) * eased;
-      targetY = restY + (webY - restY) * eased;
-    }
+    const targetX = restX + (webX - restX) * eased;
+    const targetY = restY + (webY - restY) * eased;
 
     isLandedOnWeb = scrollProgress >= 0.97;
 
-    // Ease spider toward target
-    const prevX = currentX;
-    const prevY = currentY;
-    const easeSpeed = isLandedOnWeb ? 0.28 : 0.13;
-    currentX += (targetX - currentX) * easeSpeed;
-    currentY += (targetY - currentY) * easeSpeed;
+    // ── Ease spider toward target ──────────────────────────────────────────
+    const prevX = currentX, prevY = currentY;
+    const ease  = isLandedOnWeb ? 0.28 : 0.13;
+    currentX += (targetX - currentX) * ease;
+    currentY += (targetY - currentY) * ease;
     const moveDist = Math.hypot(currentX - prevX, currentY - prevY);
 
-    // --- Spider orientation ---
+    // ── Orientation ───────────────────────────────────────────────────────
     if (isLandedOnWeb) {
       targetAngle = 0;
     } else if (scrollProgress > 0.08 && isClimbingUp) {
@@ -157,7 +158,7 @@
     while (diff >  Math.PI) diff -= Math.PI * 2;
     spiderAngle += diff * 0.15;
 
-    // --- Leg animation ---
+    // ── Leg phase ─────────────────────────────────────────────────────────
     if (isLandedOnWeb) {
       legPhase += 0.02;
     } else if (moveDist > 0.2 || Math.abs(scrollDelta) > 0.5) {
@@ -166,16 +167,15 @@
       legPhase += 0.02;
     }
 
-    // --- Draw ---
-    updateThread(headerH);
+    // ── Render ────────────────────────────────────────────────────────────
+    updateThread(hdr);
     drawSpider();
   }
 
-  // --- SVG Thread ---
-  function updateThread(headerH) {
-    // Thread always hangs from top-center of viewport (same X as anchorX after sway)
-    const ax = window.innerWidth * 0.5; // anchor is center top
-    const ay = headerH;
+  // ── SVG silk thread ───────────────────────────────────────────────────────
+  function updateThread(hdr) {
+    const ax = window.innerWidth * 0.5;
+    const ay = hdr;
 
     threadEl.setAttribute('x1', ax);
     threadEl.setAttribute('y1', ay);
@@ -185,16 +185,14 @@
     beadEl.setAttribute('cx', ax);
     beadEl.setAttribute('cy', ay + 1.5);
 
-    // Position the canvas
     spiderCvs.style.left = (currentX - W / 2) + 'px';
     spiderCvs.style.top  = (currentY - H / 2) + 'px';
   }
 
-  // --- Spider Draw ---
-  function clearCanvas() { ctx.clearRect(0, 0, W, H); }
-
+  // ── Spider canvas drawing ─────────────────────────────────────────────────
   function drawSpider() {
-    clearCanvas();
+    ctx.clearRect(0, 0, W, H);
+
     const cx = W / 2, cy = H / 2;
     ctx.save();
     ctx.translate(cx, cy);
@@ -212,38 +210,37 @@
     ctx.lineCap     = 'round';
     ctx.lineJoin    = 'round';
 
-    const baseLegs = [
-      { startY: -4, kneeX: -8,  kneeY: -11, footX: -13, footY: -9  },
-      { startY: -2, kneeX: -11, kneeY: -6,  footX: -16, footY: -4  },
-      { startY:  1, kneeX: -11, kneeY:  4,  footX: -15, footY:  10 },
-      { startY:  3, kneeX:  -8, kneeY:  9,  footX: -12, footY:  16 }
+    const legs = [
+      { sy: -4, kx: -8,  ky: -11, fx: -13, fy: -9  },
+      { sy: -2, kx: -11, ky: -6,  fx: -16, fy: -4  },
+      { sy:  1, kx: -11, ky:  4,  fx: -15, fy:  10 },
+      { sy:  3, kx:  -8, ky:  9,  fx: -12, fy:  16 }
     ];
 
-    for (let i = 0; i < baseLegs.length; i++) {
-      const leg = baseLegs[i];
-      let stepOffset = 0;
+    legs.forEach((leg, i) => {
+      let s = 0;
       if (!reducedMotion) {
         if (isLandedOnWeb) {
-          stepOffset = Math.sin(legPhase + i * 1.2) * 0.8;
+          s = Math.sin(legPhase + i * 1.2) * 0.8;
         } else if (isClimbingUp) {
-          stepOffset = Math.sin(legPhase + (i % 2 === 0 ? 0 : Math.PI)) * 3.2;
+          s = Math.sin(legPhase + (i % 2 === 0 ? 0 : Math.PI)) * 3.2;
         } else {
-          stepOffset = Math.sin(legPhase + i * (Math.PI / 2)) * 1.8;
+          s = Math.sin(legPhase + i * (Math.PI / 2)) * 1.8;
         }
       }
       // Left
       ctx.beginPath();
-      ctx.moveTo(-2.5, leg.startY);
-      ctx.lineTo(leg.kneeX + stepOffset * 0.4, leg.kneeY + stepOffset);
-      ctx.lineTo(leg.footX + stepOffset, leg.footY + stepOffset * 1.2);
+      ctx.moveTo(-2.5, leg.sy);
+      ctx.lineTo(leg.kx + s * 0.4, leg.ky + s);
+      ctx.lineTo(leg.fx + s, leg.fy + s * 1.2);
       ctx.stroke();
-      // Right (mirrored)
+      // Right (mirror)
       ctx.beginPath();
-      ctx.moveTo(2.5, leg.startY);
-      ctx.lineTo(-leg.kneeX - stepOffset * 0.4, leg.kneeY + stepOffset);
-      ctx.lineTo(-leg.footX - stepOffset, leg.footY + stepOffset * 1.2);
+      ctx.moveTo(2.5, leg.sy);
+      ctx.lineTo(-leg.kx - s * 0.4, leg.ky + s);
+      ctx.lineTo(-leg.fx - s, leg.fy + s * 1.2);
       ctx.stroke();
-    }
+    });
 
     // Abdomen
     ctx.fillStyle = '#E23636';
@@ -267,11 +264,11 @@
     // Eyes
     ctx.fillStyle = '#F3F1EA';
     ctx.fillRect(-1.6, -5.6, 1.2, 1.2);
-    ctx.fillRect(0.4,  -5.6, 1.2, 1.2);
+    ctx.fillRect( 0.4, -5.6, 1.2, 1.2);
 
     ctx.restore();
   }
 
-  // Start immediately
-  rafId = requestAnimationFrame(loop);
+  // ── Start ─────────────────────────────────────────────────────────────────
+  requestAnimationFrame(loop);
 })();
